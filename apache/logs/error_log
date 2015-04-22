@@ -2,3 +2,11 @@
 [Tue Apr 21 22:34:39 2015] [error] [client 128.211.201.132] File does not exist: /homes/yhong/MyLink/apache/htdocs/favicon.ico, referer: http://data.cs.purdue.edu:12345/
 [Tue Apr 21 22:46:13 2015] [notice] SIGHUP received.  Attempting to restart
 [Tue Apr 21 22:46:13 2015] [notice] Apache/2.2.17 (Unix) configured -- resuming normal operations
+[Tue Apr 21 22:50:22 2015] [error] [client 128.211.201.132] (8)Exec format error: exec of '/homes/yhong/MyLink/apache/htdocs/test.cgi' failed
+[Tue Apr 21 22:50:22 2015] [error] [client 128.211.201.132] Premature end of script headers: test.cgi
+[Wed Apr 22 00:09:32 2015] [error] [client 128.211.201.132] (8)Exec format error: exec of '/homes/yhong/MyLink/apache/htdocs/test.cgi' failed
+[Wed Apr 22 00:09:32 2015] [error] [client 128.211.201.132] Premature end of script headers: test.cgi
+[Wed Apr 22 00:09:45 2015] [error] [client 128.211.201.132] (8)Exec format error: exec of '/homes/yhong/MyLink/apache/htdocs/test.cgi' failed
+[Wed Apr 22 00:09:45 2015] [error] [client 128.211.201.132] Premature end of script headers: test.cgi
+[Wed Apr 22 00:09:46 2015] [error] [client 128.211.201.132] (8)Exec format error: exec of '/homes/yhong/MyLink/apache/htdocs/test.cgi' failed
+[Wed Apr 22 00:09:46 2015] [error] [client 128.211.201.132] Premature end of script headers: test.cgi
