@@ -1,2 +1,2 @@
-[Tue Apr 21 21:45:03 2015] [notice] Apache/2.2.17 (Unix) configured -- resuming normal operations
-[Tue Apr 21 21:45:18 2015] [error] [client 128.211.201.132] File does not exist: /homes/yhong/apache/htdocs/favicon.ico, referer: http://data.cs.purdue.edu:1234/
+[Tue Apr 21 22:34:24 2015] [notice] Apache/2.2.17 (Unix) configured -- resuming normal operations
+[Tue Apr 21 22:34:39 2015] [error] [client 128.211.201.132] File does not exist: /homes/yhong/MyLink/apache/htdocs/favicon.ico, referer: http://data.cs.purdue.edu:12345/

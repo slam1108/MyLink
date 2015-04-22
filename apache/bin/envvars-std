@@ -18,7 +18,7 @@
 #
 # This file is generated from envvars-std.in
 #
-LD_LIBRARY_PATH="/homes/yhong/apache/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="/homes/yhong/MyLink/apache/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 #
 
