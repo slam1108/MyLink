@@ -6,8 +6,7 @@ import cgitb; cgitb.enable()  # for troubleshooting
 import sqlite3
 
 #Get Databasedir
-MYLOGIN="grr"
-DATABASE="/homes/"+MYLOGIN+"/PictureShareDB/picture_share.db"
+DATABASE="picture_share.db"
 
 def create_session(user):
     # Store random string as session number
