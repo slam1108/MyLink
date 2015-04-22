@@ -7,9 +7,8 @@ import sqlite3
 import session
 
 #Get Databasedir
-MYLOGIN="grr"
-DATABASE="/homes/"+MYLOGIN+"/PeteTwitt/picture_share.db"
-IMAGEPATH="/homes/"+MYLOGIN+"/PeteTwitt/images"
+DATABASE="/MyLink/picture_share.db"
+IMAGEPATH="MyLink/images"
 
 ##############################################################
 # Define function to generate login HTML form.
