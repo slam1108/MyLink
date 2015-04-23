@@ -1,0 +1,14 @@
+<html>
+	<head>
+		{% if title %}
+		<title>{{ title }} - MyLink</title>
+		{% else %}
+		<title>Welcome to MyLink</title>
+		{% endif %}
+	</head>
+	<body>
+		<div>Linkbook: <a href="/index">Home</a></div>
+		<hr>
+		{% block content %}{% endblock %}
+	</body>
+</html>
