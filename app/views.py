@@ -1,18 +1,15 @@
-from app import app
-from flask import render_template, request
-from forms import ContactForm
+from app import app 
+from models import db
 
 # route for handling home page
 @app.route('/')
 def home():
 	return render_template('home.html')
 
-@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-	form = ContactForm()
-
-	if request.method == 'POST':
-		return 'Form posted.'
-	elif request.method == 'GET':
-		return render_template('contact.html', form=form)
+@app.route('/testdb')
+def testdb():
+	if db.session.query("1").from_statement("SELECT 1").all():
+		return 'It works'
+	else:
+		return 'Something is broken'
 

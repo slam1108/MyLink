@@ -1,9 +1,16 @@
+/* Message flashing */
+.flash {
+  background-color: #FBB0B0;
+  padding: 3px;
+  width: 400px;
+}
+
 /* Contact form */
 form label {
   font-size: 1.2em;
   font-weight: bold;
   display: block;
-  padding: 10px 0;
+  padding: 3px 0;
 }
  
 form input#name,
