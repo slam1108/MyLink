@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, TextAreaField, PasswordField, BooleanField, SubmitField
+from wtforms import TextField, TextAreaField, PasswordField, BooleanField, SubmitField, validators
 from wtforms.validators import Required, Length
 
 class SignupForm(Form):
@@ -12,9 +12,15 @@ class SignupForm(Form):
 	def __init__(self, *args, **kwargs):
 		Form.__init__(self, *args, **kwargs)
 
+	def validate(self):
+		if not Form.validate(self):
+			return False
+
 		user = User.query.filter_by(email = self.email.data.lower()).first()
 		if user:
 			self.email.errors.append("Email address already exists")
-			reeturn False
+			return False
 		else :
 			return True
+
+
