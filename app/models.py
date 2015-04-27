@@ -1,4 +1,5 @@
 from app import db
+from werkzeug import generate_password_hash, check_password_hash
 
 class User(db.Model):
 	uid = db.Column(db.Integer, primary_key=True)
@@ -9,7 +10,7 @@ class User(db.Model):
 	pic = db.Column(db.String(100))
 
 	def __repr__(self):
-		return '<User %r>' % (self.email)
+		return '<User %r>' % (self.firstname)
 
 	def __init__(self, firstname, lastname, email, password, pic):
 		self.firstname = firstname.title()
@@ -26,3 +27,10 @@ class User(db.Model):
 
 class Post(db.Model):
 	pid = db.Column(db.Integer, primary_key=True)
+	writer = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	belongs = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	content = db.Column(db.String(140))
+	posted = db.Column(db.DateTime)
+
+	def __repr__(self):
+		return '<Post %r>' % (self.content)
