@@ -1,47 +1,76 @@
-from app import app 
-from forms import SignupForm
-from flask import Flask, render_template, request, session
-from models import db, User
+from app import app, db, login_manager, open_id
+from flask import flash, render_template, request, session, redirect, url_for, g
+from models import User
+from forms import LoginForm
+from flask.ext.login import login_user, logout_user, current_user, login_required
 
 # route for handling home page
 @app.route('/')
-def home():
-	return render_template('home.html')
+@app.route('/index')
+@login_required
+def index():
+    user = g.user
+    posts = [
+        { 
+            'author': {'nickname': 'John'}, 
+            'body': 'Beautiful day in Portland!' 
+        },
+        { 
+            'author': {'nickname': 'Susan'}, 
+            'body': 'The Avengers movie was so cool!' 
+        }
+    ]
+    return render_template('index.html',
+                           title='Home',
+                           user=user,
+                           posts=posts)
 
-@app.route('/testdb')
-def testdb():
-	if db.session.query("1").from_statement("SELECT 1").all():
-		return 'It works'
-	else :
-		return 'Something is broken'
+# loads a user from the database
+@login_manager.user_loader
+def load_user(uid):
+	return User.query.get(int(uid))
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-	form = SignupForm()
+@app.route('/login', methods=['GET', 'POST'])
+@open_id.loginhandler
+def login():
+	if g.user is not None and g.user.is_authenticated():
+		return redirect(url_for('index'))
+	form = LoginForm()
+	if form.validate_on_submit():
+		session['remember_me'] = form.remember_me.data
+		return	open_id.try_login(form.openid.data, ask_for=['nickname', 'email'])
+	return render_template('login.html', title='Sign In',
+							form=form, providers=app.config['OPENID_PROVIDERS'])
 
-	if request.method == 'POST':
-		if form.validate() == False:
-			return render_template('signup.html', form=form)
-		else :
-			new_user = User(form.firstname,data, form.lastname.data, form.email.data, form.password.data, '')
-			db.sessoin.add(new_user)
-			db.session.commit()
-
-			session['email'] = new_user.email
-			return redirect(url_for('profile'))
-
-			return "[1] Create a new user [2] sign in the user [3] redirect to the user's profile"
-	elif request.method == 'GET':
-		return render_template('signup.html', form=form)
-
-@app.route('/profile')
-def profile():
-	if('email') not in session:
-		return redirect(url_for('signin'))
-
-	user = User.query.filter_by(email = session['email']).first()
-
+@open_id.after_login
+def after_login(resp):
+	if resp.email is None or resp.email == "":
+		flash('Invalid login. Please try again.')
+		return redirect(url_for('login'))
+	user = User.query.filter_by(email=resp.email).first()
 	if user is None:
-		return redirect(url_for('signin'))
-	else:
-		return render_template('profile.html')
+		firstname = resp.firstname
+		lastname = resp.lastname
+		email = resp.email
+		password = resp.password
+		pic = ''
+		user = User(firstname=firstname, lastname=lastname, email=email,
+					password=password, pic=pic)
+		db.session.add(user)
+		db.session.commit()
+	remember_me=False
+	if 'remember_me' in session:
+		remember_me = session['remember_me']
+		session.pop('remember_me', None)
+	login_user(user, remember = remember_me)
+	return redirect(request.args.get('next') or url_for('index'))
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+# current_user global is set by flask_login
+@app.before_request
+def before_request():
+	g.user = current_user

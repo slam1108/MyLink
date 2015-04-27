@@ -25,6 +25,21 @@ class User(db.Model):
 	def check_password(self, p):
 		return check_password_hash(self.password, p)
 
+	def is_authenticated(self):
+		return True
+
+	def is_active(self):
+		return True
+
+	def is_anonymous(self):
+		return False
+
+	def get_id(self):
+		try:
+			return unicode(self.uid)
+		except NameError:
+			return str(self.uid)
+
 class Post(db.Model):
 	pid = db.Column(db.Integer, primary_key=True)
 	writer = db.Column(db.Integer, db.ForeignKey('user.uid'))
