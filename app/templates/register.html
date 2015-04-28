@@ -1,67 +1,77 @@
-{% extends "base.html" %}
-{% block content %}
-{% include 'flash.html' %}
-<div class ="well" style="text-align:center">
-	
-	<form class="form-horizontal" style = "width:440px;margin: 0 auto;" action="" method="post" name="register">
-		{{form.hidden_tag()}}
-		<div class="control-group{% if form.errors.firstname %} error{% endif%}">
-				<label class="control-label" for="firstname"><b>Firstname:</b></label>
-				<div class="controls">
-				{{form.firstname(style="width:250px")}}
-				{% for error in form.errors.firstname %}
-					<span class="help-inline">[{{error}}]</span><br>
-				{% endfor %}
-			</div>
-		</div>
+<!DOCTYPE html>
 
-		<div class="control-group{% if form.errors.lastname %} error{% endif%}">
-				<label class="control-label" for="lastname"><b>Lastname:</b></label>
-				<div class="controls">
-				{{form.lastname(style="width:250px")}}
-				{% for error in form.errors.lastname %}
-					<span class="help-inline">[{{error}}]</span><br>
-				{% endfor %}
-			</div>
-		</div>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-		<div class="control-group{% if form.errors.email %} error{% endif%}">
-			<label class="control-label" for="email"><b>Email:</b></label>
-			<div class="controls">
-				{{form.email(style="width:250px")}}
-				{% for error in form.errors.email %}
-					<span class="help-inline">[{{error}}]</span><br>
-				{% endfor %}
-			</div>
-		</div>
+	    <title>Register Page</title>
 
-		<div class="control-group{% if form.errors.password %} error{% endif%}">
-			<label class="control-label" for="password"><b>Password:</b></label>
-			<div class="controls">
-				{{form.password(style="width:250px")}}
-				{% for error in form.errors.password %}
-					<span class="help-inline">[{{error}}]</span><br>
-				{% endfor %}
-			</div>
-		</div>
+	    <!-- Bootstrap core CSS -->
+        <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 
-		<div class="control-group{% if form.errors.confirm_password %} error{% endif%}">
-			<label class="control-label" for="confirm_password"><b>Re-type password:</b></label>
-			<div class="controls">
-				{{form.confirm_password(style="width:250px")}}
-				{% for error in form.errors.confirm_pssword %}
-					<span class="help-inline">[{{error}}]</span><br>
-				{% endfor %}
-			</div>
-		</div>
-		<input class="btn btn-primary" type="submit" value="Sign up">
+        <!-- Custom styles for this template -->
+        <link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
+	</head>
 
-	</form>
-</div>
-<script>
-function myFunction()
-{
-	alert("Confirmation email has been sent to you !!");
-}
-</script>
-{% endblock %}
+	<body>
+
+		<div class ="container">
+			
+			<form class="form-signin" action="" method="post" name="register">
+				{{form.hidden_tag()}}
+				<h2 class="form-signin-heading">Register Form</h2>
+
+				<div class="control-group{% if form.errors.firstname %} error{% endif%}">
+					{{form.firstname(class="form-control", placeholder="Firstname")}}
+					{% for error in form.errors.firstname %}
+						<span class="help-inline">[{{error}}]</span>
+					{% endfor %}
+				</div>
+
+				<div class="control-group{% if form.errors.lastname %} error{% endif%}">
+					{{form.lastname(class="form-control", placeholder="Lastname")}}
+					{% for error in form.errors.lastname %}
+						<span class="help-inline">[{{error}}]</span>
+					{% endfor %}
+				</div>
+
+				<div class="control-group{% if form.errors.email %} error{% endif%}">
+					{{form.email(class="form-control", placeholder="Email")}}
+					{% for error in form.errors.email %}
+						<span class="help-inline">[{{error}}]</span>
+					{% endfor %}
+				</div>
+
+				<div class="control-group{% if form.errors.password %} error{% endif%}">
+					{{form.password(class="form-control", placeholder="Password")}}
+					{% for error in form.errors.password %}
+						<span class="help-inline">[{{error}}]</span>
+					{% endfor %}
+				</div>
+
+				<div class="control-group{% if form.errors.confirm_password %} error{% endif%}">
+					{{form.confirm_password(class="form-control", placeholder="Confirm password")}}
+					{% for error in form.errors.confirm_password %}
+						<span class="help-inline">[{{error}}]</span>
+					{% endfor %}
+				</div>
+
+				<input class="btn btn-primary" type="submit" value="Register">
+
+			</form>
+		</div>
+		<script>
+		function myFunction()
+		{
+			alert("Confirmation email has been sent to you !!");
+		}
+		</script>
+	</body>
+</html>

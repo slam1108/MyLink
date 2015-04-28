@@ -1,48 +1,93 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-{% block content %}
-{% include 'flash.html' %}
-<div class="well" style="text-align:center">
-    <h3>Log In</h3>
-    <form class="form" action="" method="post" name="login">
-        {{form.hidden_tag()}}
+        <title>Log In Page</title>
 
-        <div class="control-group{% if form.errors.email %} error{% endif %}">
-            <div class="controls">
-                {{form.email(style="width:180px;text-align:center", placeholder="Email:") }}
+        <!-- Bootstrap core CSS -->
+        <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
+    </haed>
+
+    <body>
+
+        <div class="container">
+
+            <form class="form-signin" action="" method="post" name="login">
+                {{form.hidden_tag()}}
+                <h2 class="form-signin-heading">Please log in</h2>
+                {{form.email(class="form-control", placeholder="Email address") }}
                 {% for error in form.errors.email %}
                     <span class="help-inline">[{{error}}]</span><br>
                 {% endfor %}
-            </div>
-        </div>
 
-        <div class="control-group{% if form.errors.password %} error{% endif %}">
-            <div class="controls">
-                {{form.password(style="width:180px;text-align:center", placeholder="Password:")}}
+                {{form.password(class="form-control", placeholder="Password")}}
                 {% for error in form.errors.password %}
                     <span class="help-inline">[{{error}}]</span><br>
                 {% endfor %}
-            </div>
-        </div>
 
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox inline" for="remember_me">
-                    {{form.remember_me}} Remember Me
-                </label>                
-            </div>
-        </div>
+                <div class="checkbox">
+                    <label class="checkbox inline" for="remember_me">
+                        {{form.remember_me}} Remember me
+                    </label>
+                </div>
 
-        <div class="control-group">
-            <div class="controls">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Log In</button>
+
                 <label>
-                    <a href="{{url_for('register')}}">Register</a>
+                    <label>
+                        Not registered? <a href="{{url_for('register')}}">Register Here</a>
+                    </label>
                 </label>
-            </div>
-        </div>
 
-        <input class="btn btn-primary" type="submit" value="Login">
-            
-    </form>
-</div>
-{% endblock %}
+<!--
+                <div class="control-group{% if form.errors.email %} error{% endif %}">
+                    <div class="controls">
+                        {{form.email(style="width:180px;text-align:center", placeholder="Email:") }}
+                        {% for error in form.errors.email %}
+                            <span class="help-inline">[{{error}}]</span><br>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="control-group{% if form.errors.password %} error{% endif %}">
+                    <div class="controls">
+                        {{form.password(style="width:180px;text-align:center", placeholder="Password:")}}
+                        {% for error in form.errors.password %}
+                            <span class="help-inline">[{{error}}]</span><br>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label class="checkbox inline" for="remember_me">
+                            {{form.remember_me}} Remember Me
+                        </label>                
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label>
+                            <a href="{{url_for('register')}}">Register</a>
+                        </label>
+                    </div>
+                </div>
+
+                <input class="btn btn-primary" type="submit" value="Login">
+             -->       
+            </form>
+        </div>
+    </body>
+</html>

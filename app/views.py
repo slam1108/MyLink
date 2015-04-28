@@ -7,7 +7,6 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 # route for handling home page
 @app.route('/')
 @app.route('/intro')
-@login_required
 def intro():
     if g.user is None or g.user.is_authenticated() == False:
     	return render_template('intro.html')
@@ -19,7 +18,6 @@ def load_user(uid):
 	return User.query.get(int(uid))
 
 @app.route('/login', methods=['GET', 'POST'])
-@open_id.loginhandler
 def login():
 	if g.user is not None and g.user.is_authenticated():
 		return redirect(url_for('intro'))
@@ -82,7 +80,7 @@ def register():
 						password=password, pic=pic)
 			db.session.add(user)
 			db.session.commit()
-			return render_template('login.html')
+			return render_template('login.html', form=form)
 	return render_template('register.html', title='Register', form=form)
 
 

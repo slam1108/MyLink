@@ -1,5 +1,6 @@
-<html>
+<html lang="en">
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href-"/static/css/bootstrap.css" rel="stylesheet" media="screen">
         {% if title %}
         <title>{{ title }} - MyLink</title>
@@ -15,8 +16,6 @@
             {% endif %}
         </div>
         <hr>
-        {% with messages = get_flashed_messages() %}
-        {% endwith %}
         {% block content %}
         {% endblock %}
     </body>
