@@ -2,7 +2,7 @@
 {% block content %}
 {% include 'flash.html' %}
 <div class ="well" style="text-align:center">
-	<h3>&nbsp&nbspRegister</h3>
+	
 	<form class="form-horizontal" style = "width:440px;margin: 0 auto;" action="" method="post" name="register">
 		{{form.hidden_tag()}}
 		<div class="control-group{% if form.errors.firstname %} error{% endif%}">
@@ -54,7 +54,7 @@
 				{% endfor %}
 			</div>
 		</div>
-		&nbsp&nbsp&nbsp&nbsp&nbsp<input class="btn btn-primary" type="submit" value="Sign up">
+		<input class="btn btn-primary" type="submit" value="Sign up">
 
 	</form>
 </div>

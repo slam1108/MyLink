@@ -8,22 +8,16 @@
         {% endif %}
     </head>
     <body>
-        <div>Microblog:
-            <a href="{{ url_for('index') }}">Home</a>
+        <div>MyLink:
+            <a href="{{ url_for('intro') }}">Home</a>
             {% if g.user.is_authenticated() %}
             | <a href="{{ url_for('logout') }}">Logout</a>
             {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-        {% for message in messages %}
-        <li>{{ message }} </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </body>
 </html>
