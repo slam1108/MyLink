@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "flash.html" %}
+<div class="hero-unit">
+	<h1>MyLink!</h1>
+	<br>
+	<p>Hello there!<br>
+	MyLink is a web application developed by Python and Flask.<br>
+	</p>
+	<p>Please sign in to enjoy MyLink. You can search your friends by their names and usernames.</p>
+	<small><em>Author: Yongsun Hong</em></p></small>
+
+	<a class="btn btn-large btn-success"  href="{{url_for('login')}}">Get Started</a>
+
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'flash.html' %}
+<div class ="well" style="text-align:center">
+	<h3>&nbsp&nbspRegister</h3>
+	<form class="form-horizontal" style = "width:440px;margin: 0 auto;" action="" method="post" name="register">
+		{{form.hidden_tag()}}
+		<div class="control-group{% if form.errors.firstname %} error{% endif%}">
+				<label class="control-label" for="firstname"><b>Firstname:</b></label>
+				<div class="controls">
+				{{form.firstname(style="width:250px")}}
+				{% for error in form.errors.firstname %}
+					<span class="help-inline">[{{error}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="control-group{% if form.errors.lastname %} error{% endif%}">
+				<label class="control-label" for="lastname"><b>Lastname:</b></label>
+				<div class="controls">
+				{{form.lastname(style="width:250px")}}
+				{% for error in form.errors.lastname %}
+					<span class="help-inline">[{{error}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="control-group{% if form.errors.email %} error{% endif%}">
+			<label class="control-label" for="email"><b>Email:</b></label>
+			<div class="controls">
+				{{form.email(style="width:250px")}}
+				{% for error in form.errors.email %}
+					<span class="help-inline">[{{error}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="control-group{% if form.errors.password %} error{% endif%}">
+			<label class="control-label" for="password"><b>Password:</b></label>
+			<div class="controls">
+				{{form.password(style="width:250px")}}
+				{% for error in form.errors.password %}
+					<span class="help-inline">[{{error}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="control-group{% if form.errors.confirm_password %} error{% endif%}">
+			<label class="control-label" for="confirm_password"><b>Re-type password:</b></label>
+			<div class="controls">
+				{{form.confirm_password(style="width:250px")}}
+				{% for error in form.errors.confirm_pssword %}
+					<span class="help-inline">[{{error}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+		&nbsp&nbsp&nbsp&nbsp&nbsp<input class="btn btn-primary" type="submit" value="Sign up">
+
+	</form>
+</div>
+<script>
+function myFunction()
+{
+	alert("Confirmation email has been sent to you !!");
+}
+</script>
+{% endblock %}
