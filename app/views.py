@@ -1,10 +1,11 @@
-from app import app, db, login_manager, service, csrf
-from flask import flash, render_template, request, session, redirect, url_for, g
+from app import app, db, login_manager, service, csrf, os
+from flask import flash, render_template, request, session, redirect, url_for, g, send_from_directory
 from models import User
 from forms import LoginForm, RegisterForm, EditForm, ProfileForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
 from werkzeug import secure_filename
+from config import IMAGE_SRC, ALLOWED_EXTENSIONS
 
 CsrfProtect(app)
 
@@ -111,9 +112,36 @@ def register():
 @csrf.exempt
 def profile():
 	form = ProfileForm()
+	#print 'fuck'
 	if form.validate_on_submit():
-		if form.pic.data.filename and allowed_file
-	return render_template('profile.html', user=g.user)
+		if request.method == 'POST':
+			file = request.files['file']
+			print file
+			if file and allowed_file(file.filename):
+				filename = secure_filename(file.filename)
+				#print 'filename'+filename
+				file.save(os.path.join(IMAGE_SRC, filename))
+				path = '/static/'+filename
+				#print 'path'+path
+				db.session.query(User).filter_by(uid=g.user.uid).update({"pic":filename})
+				db.session.commit()
+				print '#######################'+g.user.pic
+				return redirect(url_for('profile'))
+			else:
+				db.session.query(User).filter_by(uid=g.user.uid).update({"pic":''})
+				db.session.commit()
+				return redirect(url_for('profile'))
+
+	return render_template('profile.html', user=g.user, form=form)
+
+def allowed_file(filename):
+	return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/upload/<filename>', methods = ['GET', 'POST'])
+@login_required
+def upload_file(filename):
+	return send_from_directory(IMAGE_SRC, filename)
 
 @app.route('/edit', methods=['GET','POST'])
 @login_required

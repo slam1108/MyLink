@@ -7,22 +7,26 @@
 	<br>
 	
 	<div>
-		<img data-src="holder.js/200x200" class="img-thumbnail" alt="200x200" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+" data-holder-rendered="true" style="width: 200px; height: 200px;">
-
-		<form class="form-signin" action="upload" method="post" enctype="multipart/form-data">
-			{{form.hidden_tag()}}
-            {{form.csrf_token}}
-			<input type="file" onchange="onFileSelected(event)" name="file" data-filename-placement="inside">
-		</form>
+		{% if user.pic == '': %}
+			<img data-src="holder.js/200x200" class="img-thumbnail" alt="200x200" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+" data-holder-rendered="true" style="width: 200px; height: 200px;">
+		{% else: %}
+			<img src="{{url_for('static', filename = user.pic)}}", class="img-polaroid" alt="200x200" style="width: 200px; height: 200px;">
+		{% endif %}
 
 		<h4>Firstname: {{ user.firstname }}</h4>
 		<h4>Lastname: {{ user.lastname }}</h4>
 		<h4>Email: {{ user.email }}</h4>
 	</div>
-	<br>
-
-	<a class="btn btn-large btn-success"  href="{{url_for('edit')}}">Edit Profile</a>
-	<input type="submit" class="btn btn-primary" value="Save pictures">
+	
+	<form class="form-signin" action="" method="post" enctype="multipart/form-data">
+       	{{form.csrf_token}}
+		<input type="file" onchange="onFileSelected(event)" name="file" data-filename-placement="inside">
+		<br>
+		<a class="btn btn-large btn-success"  href="{{url_for('edit')}}">Edit Profile</a>
+		<input type="submit" class="btn btn-large btn-success" value="Save pictures">
+	</form>
+	
+	
 
 </div>
 

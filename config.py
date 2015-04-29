@@ -16,6 +16,7 @@ MAIL_USERNAME = 'serendibeats@gmail.com'
 MAIL_PASSWORD = 'Slam1108!'
 
 # IMG Folder configuration
-IMAGE_SRC = '/$HOME/Desktop/CS390/MyLink/app/images'
+IMAGE_SRC = '/Users/YONGSUN/Desktop/CS390/MyLink/app/static'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 ADMINS = ['yhong@purdue.edu']
