@@ -6,7 +6,7 @@
 		<form class="form-signin" action="" method="post" name="register">
 			{{form.hidden_tag()}}
             {{form.csrf_token}}
-			<h2 class="form-signin-heading">Register Form</h2>
+			<h2 class="form-signin-heading">Edit Form</h2>
 
 			<div class="control-group{% if form.errors.firstname %} error{% endif%}">
 				{{form.firstname(class="form-control", placeholder="Firstname")}}
@@ -22,16 +22,16 @@
 				{% endfor %}
 			</div>
 
-			<div class="control-group{% if form.errors.email %} error{% endif%}">
-				{{form.email(class="form-control", placeholder="Email")}}
-				{% for error in form.errors.email %}
+			<div class="control-group{% if form.errors.password %} error{% endif%}">
+				{{form.password(class="form-control", placeholder="Password")}}
+				{% for error in form.errors.password %}
 					<span class="help-inline">[{{error}}]</span>
 				{% endfor %}
 			</div>
 
-			<div class="control-group{% if form.errors.password %} error{% endif%}">
-				{{form.password(class="form-control", placeholder="Password")}}
-				{% for error in form.errors.password %}
+			<div class="control-group{% if form.errors.email %} error{% endif%}">
+				{{form.new_password(class="form-control", placeholder="New password")}}
+				{% for error in form.errors.email %}
 					<span class="help-inline">[{{error}}]</span>
 				{% endfor %}
 			</div>
@@ -43,7 +43,7 @@
 				{% endfor %}
 			</div>
 			
-			<input class="btn btn-primary" type="submit" value="Register">
+			<input class="btn btn-primary" type="submit" value="Edit">
 
 		</form>
 	</div>

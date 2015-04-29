@@ -3,8 +3,12 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from config import basedir
+from flask_wtf.csrf import CsrfProtect
+
+csrf = CsrfProtect()
 
 app = Flask(__name__)
+csrf.init_app(app)
 
 # database setting
 app.config.from_object('config')

@@ -6,6 +6,7 @@
     <div class="container">
         <form class="form-signin" action="" method="post" name="login">
             {{form.hidden_tag()}}
+            {{form.csrf_token}}
             <h2 class="form-signin-heading">Please log in</h2>
             {{form.email(class="form-control", placeholder="Email address") }}
             {% for error in form.errors.email %}

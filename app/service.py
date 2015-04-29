@@ -7,9 +7,7 @@ def send_activate(user):
 					  sender='serendibeats@gmail.com',
 					  recipients=[user.get_email()])
 	activate_url = url_for('activate_account', uid=user.get_id(), _external=True)
-	print '#######################################'
 	message.html = activate_url
-	print message.html
 	mail.send(message)
 
 

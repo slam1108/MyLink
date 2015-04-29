@@ -33,6 +33,9 @@ class User(db.Model):
 	def check_password(self, p):
 		return check_password_hash(self.password, p)
 
+	def hash_password(self, p):
+		return generate_password_hash(p)
+
 	def is_authenticated(self):
 		return True
 
