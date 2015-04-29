@@ -21,6 +21,9 @@ class User(db.Model):
 		self.pic = pic
 		self.activate = activate
 
+	def get_email(self):
+		return self.email
+		
 	def activated(self):
 		return self.activate
 

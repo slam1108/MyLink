@@ -1,4 +1,4 @@
-from app import app, db, login_manager, open_id
+from app import app, db, login_manager, service
 from flask import flash, render_template, request, session, redirect, url_for, g
 from models import User
 from forms import LoginForm, RegisterForm
@@ -34,6 +34,7 @@ def login():
 		elif not user.check_password(password):
 			flash('Incorrect password. Please check again.')
 		elif user.activated() == False:
+			service.send_activate(user)
 			return render_template('welcome.html')
 		else:
 			session['user_id'] = user.uid
@@ -44,6 +45,13 @@ def login():
 			login_user(user, remember = remember_me)
 			return redirect(request.args.get('next') or url_for('intro'))
 	return render_template('login.html', title='Register', error=error, form=form)
+
+@app.route('/activate_account/<uid>')
+def activate_account(uid):
+	user = User.query.filter_by(uid=uid).first()
+	db.session.query(User).filter_by(uid=uid).update({"activate":True})
+	db.session.commit()
+	return render_template('activate.html')
 
 @app.route('/logout')
 def logout():
@@ -83,6 +91,7 @@ def register():
 						password=password, pic=pic, activate=activate)
 			db.session.add(user)
 			db.session.commit()
+			service.send_activate(user)
 			return render_template('welcome.html')
 	return render_template('register.html', title='Register', form=form)
 
