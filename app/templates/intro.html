@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "flash.html" %}
-<div class="hero-unit">
+
+<div class="container marketing" align="center">
+
 	<h1>MyLink!</h1>
 	<br>
-	<p>Hello there!<br>
-	MyLink is a web application developed by Python and Flask.<br>
-	</p>
-	<p>Please sign in to enjoy MyLink. You can search your friends by their names and usernames.</p>
-	<small><em>Author: Yongsun Hong</em></p></small>
+	<p>Hello!<br><p>
+	<p>MyLink is a web application developed by Python, Flask and Bootstrap.<br></p>
+	<p>This application has functionalities similar to the ones offered by Facebook <br></p>
+	<p>Please click the button to enjoy MyLink. </p>
+	<small><em>Author: Yongsun Hong<br>Contact: yhong@purdue.edu</em></p></small>
 
-	<a class="btn btn-large btn-success"  href="{{url_for('login')}}">Get Started</a>
-
+	<a class="btn btn-large btn-success"  href="{{url_for('login')}}">Start MyLink</a>
 </div>
+
 {% endblock %}

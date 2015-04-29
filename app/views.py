@@ -80,7 +80,7 @@ def register():
 						password=password, pic=pic)
 			db.session.add(user)
 			db.session.commit()
-			return render_template('login.html', form=form)
+			return render_template('login.html')
 	return render_template('register.html', title='Register', form=form)
 
 
