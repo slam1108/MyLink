@@ -25,6 +25,10 @@ class EditForm(Form):
 	firstname = TextField('firstname', validators=[Required()])
 	lastname = TextField('lastname', validators=[Required()])
 
+class PostForm(Form):
+	content = TextField('content', validators=[Required()])
+	pic = FileField('')
+
 
 
 
