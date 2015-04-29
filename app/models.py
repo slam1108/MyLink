@@ -54,8 +54,9 @@ class User(db.Model):
 class Post(db.Model):
 	pid = db.Column(db.Integer, primary_key=True)
 	writer = db.Column(db.Integer, db.ForeignKey('user.uid'))
-	belongs = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	wid = db.Column(db.Integer, db.ForeignKey('user.uid'))
 	content = db.Column(db.String(140))
+	pic = db.Column(db.String(1000))
 	posted = db.Column(db.DateTime)
 
 	def __repr__(self):
