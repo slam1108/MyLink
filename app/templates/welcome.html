@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container marketing" align="center">
+
+	<h1>Registration is done successfully!</h1>
+	<br>
+	<p>Activation-mail is sent to your email address!<br><p>
+	<p>Please check your inbox and activate your account.<br></p>
+	
+	<small><em>Author: Yongsun Hong<br>Contact: yhong@purdue.edu</em></p></small>
+
+	<a class="btn btn-large btn-success"  href="{{url_for('login')}}">Login</a>
+</div>
+
+{% endblock %}

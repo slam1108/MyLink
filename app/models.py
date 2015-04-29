@@ -8,16 +8,21 @@ class User(db.Model):
 	email = db.Column(db.String(120), unique=True)
 	password = db.Column(db.String(54))
 	pic = db.Column(db.String(100))
+	activate = db.Column(db.Boolean)
 
 	def __repr__(self):
 		return '<User %r>' % (self.firstname)
 
-	def __init__(self, firstname, lastname, email, password, pic):
+	def __init__(self, firstname, lastname, email, password, pic, activate):
 		self.firstname = firstname.title()
 		self.lastname = lastname.title()
 		self.email = email.lower()
 		self.set_password(password)
 		self.pic = pic
+		self.activate = activate
+
+	def activated(self):
+		return self.activate
 
 	def set_password(self, p):
 		self.password = generate_password_hash(p)
@@ -49,3 +54,5 @@ class Post(db.Model):
 
 	def __repr__(self):
 		return '<Post %r>' % (self.content)
+
+

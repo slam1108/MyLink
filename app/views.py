@@ -33,6 +33,8 @@ def login():
 			flash('You are not registered. Please register first.')
 		elif not user.check_password(password):
 			flash('Incorrect password. Please check again.')
+		elif user.activated() == False:
+			return render_template('welcome.html')
 		else:
 			session['user_id'] = user.uid
 			remember_me = False
@@ -66,6 +68,7 @@ def register():
 		email = form.email.data.lower()
 		password = form.password.data
 		confirm_password = form.confirm_password.data
+		activate = False
 		pic = '';
 
 		user = User.query.filter_by(email=email).first()
@@ -77,10 +80,10 @@ def register():
 			flash('Please check confirm password')
 		else:
 			user = User(firstname=firstname, lastname=lastname, email=email,
-						password=password, pic=pic)
+						password=password, pic=pic, activate=activate)
 			db.session.add(user)
 			db.session.commit()
-			return render_template('login.html')
+			return render_template('welcome.html')
 	return render_template('register.html', title='Register', form=form)
 
 
