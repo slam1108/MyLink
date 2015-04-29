@@ -1,9 +1,10 @@
 from app import app, db, login_manager, service, csrf
 from flask import flash, render_template, request, session, redirect, url_for, g
 from models import User
-from forms import LoginForm, RegisterForm, EditForm
+from forms import LoginForm, RegisterForm, EditForm, ProfileForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
+from werkzeug import secure_filename
 
 CsrfProtect(app)
 
@@ -109,6 +110,9 @@ def register():
 @login_required
 @csrf.exempt
 def profile():
+	form = ProfileForm()
+	if form.validate_on_submit():
+		if form.pic.data.filename and allowed_file
 	return render_template('profile.html', user=g.user)
 
 @app.route('/edit', methods=['GET','POST'])

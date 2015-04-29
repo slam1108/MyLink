@@ -15,8 +15,10 @@ class RegisterForm(Form):
 	password = PasswordField('password', validators=[Required()])
 	confirm_password = PasswordField('confirm_password', validators=[Required()])
 
+class ProfileForm(Form):
+	pic = FileField('')
+
 class EditForm(Form):
-	pic = FileField('pic')
 	password = PasswordField('password', validators=[Required()])
 	new_password = PasswordField('password', validators=[Required()])
 	confirm_password = PasswordField('password', validators=[Required()])

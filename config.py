@@ -15,4 +15,7 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = 'serendibeats@gmail.com'
 MAIL_PASSWORD = 'Slam1108!'
 
+# IMG Folder configuration
+IMAGE_SRC = '/$HOME/Desktop/CS390/MyLink/app/images'
+
 ADMINS = ['yhong@purdue.edu']
