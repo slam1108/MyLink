@@ -218,7 +218,7 @@ def hack():
 		for u in users:
 			db.session.query(User).filter_by(uid=u.uid).update({"activate":True})
 		db.session.commit()
-	return redirect(url_for('newsfeed',wid=g.user.id))
+	return redirect(url_for('newsfeed',wid=g.user.uid))
 
 
 @app.route('/friends', methods=['GET','POST'])
@@ -228,11 +228,13 @@ def friend():
 	users = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).order_by(Friend.since.desc()).all()
 	return render_template('friend.html')
 
-@app.route('/request')
+@app.route('/find')
 @login_required
 @csrf.exempt
-def request():
-	return render_template('request.html')
+def find():
+	subquery = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).all()
+	users = db.session.query(User,Friend).filter(~User.uid.in_(subquery))
+	return render_template('find.html')
 
 @app.route('/newsfeed', methods=['GET','POST'])
 @app.route('/newsfeed/<wid>', methods=['GET', 'POST'])

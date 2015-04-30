@@ -23,7 +23,6 @@
         <![endif]-->
 
         <!-- Custom styles for this template -->
-        <link href="http://getbootstrap.com/examples/carousel/carousel.css" rel="stylesheet">
         
 
         <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
@@ -31,6 +30,8 @@
 
         <!-- Custom styles for this template -->
         <link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
+        
+        <link href="http://getbootstrap.com/examples/carousel/carousel.css" rel="stylesheet">
 
     </head>
 
@@ -58,11 +59,11 @@
                                 <li><a href="{{ url_for('newsfeed',wid=g.user.uid) }}">Newsfeed</a></li>
                                 <li><a href="{{ url_for('wall',wid=g.user.uid) }}">Wall</a></li>
                                 <li><a href="{{ url_for('friend') }}">Friends</a></li>
-                                <li><a href="{{ url_for('request') }}">Request</a></li>
+                                <li><a href="{{ url_for('find') }}">Request</a></li>
                                 <li><a href="{{ url_for('profile') }}">Profile</a></li>
                                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
                                 {% if g.user.email == 'yhong@purdue.edu' %}
-                                    <li><a href="{{ url_for('hack') }}">Hack</a></li>
+                                    <li><a href="{{ url_for('hack') }}">* Hack [!!]</a></li>
                                 {% endif %}
                             {% else %}
                                 <li class="active"><a href="{{ url_for('intro') }}">Home</a></li>
