@@ -1,16 +1,18 @@
-<div>
-	<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:200px; height:220px; border:1px solid black;"> 
-	<div style="width:300px;display:inline-block;vertical-align:top;">
-		<div style="width: 300px;padding-bottom:2px" align="left">	
-			<a href="{{url_for('wall',wid=post.Post.writer)}}"><b>{{post.User.firstname}} {{post.User.lastname}}</b><br></a>
-			<b>({{post.User.email}})</b><br>
-			<i><small><em>{{post.Post.posted}}</em></p></small></i>
-			<hr>
+<div style="background:white;width:440px;">
+	
+	<div style="width:430px;display:inline-block;vertical-align:top;">
+		<div style="width: 430px;padding-bottom:2px;padding-top:10px;padding-left:5px" align="left">
+			<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:60px; height:80px; border:1px solid black;"> 
+			<div style="display:inline-block;vertical-align:middle;">
+				<a href="{{url_for('wall',wid=post.Post.writer)}}"><b>{{post.User.firstname}} {{post.User.lastname}}</b><br></a>
+				<b>({{post.User.email}})</b><br>
+				<small><em>{{post.Post.posted}}</em></small>
+			</div>
 		</div>
-		<div style="display:inline-block;width:300px;" align="left">
+		<div style="display:inline-block;width:430px;padding-left:20px;padding-top:10px;padding-bottom:20px" align="left">
 			{{ post.Post.content }}
 			{% if post.Post.pic != '': %}
-				<img src="{{url_for('static', filename=post.pic)}}" class="img-polaroid" style=" width:300px; height:220px; border:1px solid black;"> 
+				<img src="{{url_for('static', filename=post.pic)}}" class="img-polaroid" style=" width:430px; height:220px; border:1px solid black;"> 
 			{% endif %}
 		</div>
 	</div>
