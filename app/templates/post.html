@@ -2,7 +2,7 @@
 	<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:200px; height:220px; border:1px solid black;"> 
 	<div style="width:300px;display:inline-block;vertical-align:top;">
 		<div style="width: 300px;padding-bottom:2px" align="left">	
-			<b>{{post.User.firstname}} {{post.User.lastname}}</b><br>
+			<a href="{{url_for('wall',wid=post.Post.writer)}}"><b>{{post.User.firstname}} {{post.User.lastname}}</b><br></a>
 			<b>({{post.User.email}})</b><br>
 			<i><small><em>{{post.Post.posted}}</em></p></small></i>
 			<hr>
