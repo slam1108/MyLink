@@ -185,10 +185,11 @@ def wall(wid):
 		if request.method == 'POST':
 			file = request.files['file']
 			#print 'request'
-			if file and allowed_file(file):
+			if file and allowed_file(file.filename):
 				pic = secure_filename(file.filename)
 				file.save(os.path.join(IMAGE_SRC, pic))
-				post = Post(writer=g.user.id, wid=wid, content=form.content.data, pic=pic, posted=posted)
+				print 'filename:'+pic
+				post = Post(writer=g.user.uid, wid=wid, content=form.content.data, pic=pic, posted=posted)
 				db.session.add(post)
 				db.session.commit()
 				#print 'redirect @@@@@@@@@@@@@@@@@@@@@@@'
@@ -204,8 +205,8 @@ def wall(wid):
 	belongs = User.query.filter_by(uid=wid).first()
 	wall = Post.query.filter(Post.wid == wid).order_by(Post.pid.desc())
 	wall = db.session.query(User,Post).filter(Post.wid==wid).filter(User.uid==wid).order_by(Post.pid.desc()).all()
-	print wall
-	print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
+	#print wall
+	#print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
 	return render_template("wall.html", form=form, wall=wall, belongs=belongs, writer=g.user)
 	
 

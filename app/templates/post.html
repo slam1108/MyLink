@@ -9,9 +9,11 @@
 			</div>
 		</div>
 		<div style="display:inline-block;width:430px;padding-left:20px;padding-top:10px;padding-bottom:20px" align="left">
-			{{ post.Post.content }}
+			<div style="padding-bottom:10px">
+				{{ post.Post.content }}
+			</div>
 			{% if post.Post.pic != '': %}
-				<img src="{{url_for('static', filename=post.pic)}}" class="img-polaroid" style=" width:430px; height:220px; border:1px solid black;"> 
+				<img src="{{url_for('static', filename=post.Post.pic)}}" class="img-polaroid" style=" width:390px; height:220px; solid black;"> 
 			{% endif %}
 		</div>
 	</div>
