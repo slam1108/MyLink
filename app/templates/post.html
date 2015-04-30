@@ -1,9 +1,8 @@
-<div style="background:white;width:440px;">
-	
+<div style="background:white;width:440px;border:1px dotted grey;">
 	<div style="width:430px;display:inline-block;vertical-align:top;">
 		<div style="width: 430px;padding-bottom:2px;padding-top:10px;padding-left:5px" align="left">
-			<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:60px; height:80px; border:1px solid black;"> 
-			<div style="display:inline-block;vertical-align:middle;">
+			<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:60px; height:80px; border:1px solid grey;"> 
+			<div style="display:inline-block;vertical-align:middle;padding-left:5px">
 				<a href="{{url_for('wall',wid=post.Post.writer)}}"><b>{{post.User.firstname}} {{post.User.lastname}}</b><br></a>
 				<b>({{post.User.email}})</b><br>
 				<small><em>{{post.Post.posted}}</em></small>
