@@ -1,5 +1,6 @@
 from app import db
 from werkzeug import generate_password_hash, check_password_hash
+from datetime import datetime
 
 class User(db.Model):
 	uid = db.Column(db.Integer, primary_key=True)
@@ -68,5 +69,45 @@ class Post(db.Model):
 
 	def __repr__(self):
 		return '<Post %r>' % (self.content)
+
+class Request(db.Model):
+	rid = db.Column(db.Integer, primary_key=True)
+	sender = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	receiver = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	confirmed = db.Column(db.Boolean)
+
+	def __init__(self, sender, receiver):
+		self.sender = sender
+		self.receiver = receiver
+		self.confirmed = False
+
+	def confirm(self):
+		self.confirmed = True
+		s = Friend(self.sender, self.receiver)
+		r = Friend(self.receiver, self.sender)
+		db.session.add(s)
+		db.session.add(r)
+		db.session.commit()
+
+	def __repr__(self):
+		return '<Request %r>' % (self.rid)
+
+class Friend(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	fid = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	since = db.Column(db.DateTime)
+
+	def __init__(self, uid, fid):
+		self.uid = uid;
+		self.fid = fid;
+		self.since = datetime.utcnow()
+
+	def __repr__(self):
+		return '<Friend %r>' % (self.uid)
+
+
+
+
 
 
