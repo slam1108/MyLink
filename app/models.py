@@ -59,6 +59,13 @@ class Post(db.Model):
 	pic = db.Column(db.String(1000))
 	posted = db.Column(db.DateTime)
 
+	def __init__(self, writer, wid, content, pic, posted):
+		self.writer = writer
+		self.wid = wid
+		self.content = content
+		self.pic = pic
+		self.posted = posted
+
 	def __repr__(self):
 		return '<Post %r>' % (self.content)
 

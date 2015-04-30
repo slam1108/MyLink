@@ -1,11 +1,12 @@
 from app import app, db, login_manager, service, csrf, os
 from flask import flash, render_template, request, session, redirect, url_for, g, send_from_directory
-from models import User
-from forms import LoginForm, RegisterForm, EditForm, ProfileForm
+from models import User, Post
+from forms import LoginForm, RegisterForm, EditForm, ProfileForm, PostForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
 from werkzeug import secure_filename
 from config import IMAGE_SRC, ALLOWED_EXTENSIONS
+from datetime import datetime
 
 CsrfProtect(app)
 
@@ -16,7 +17,7 @@ CsrfProtect(app)
 def intro():
     if g.user is None or g.user.is_authenticated() == False:
     	return render_template('intro.html')
-    return render_template('intro.html')
+    return redirect(url_for('wall', wid=g.user.uid))
 
 # loads a user from the database
 @login_manager.user_loader
@@ -50,6 +51,7 @@ def login():
 				remember_me = session['remember_me']
 				session.pop('remember_me', None)
 			login_user(user, remember = remember_me)
+			form = PostForm()
 			return redirect(request.args.get('next') or url_for('intro'))
 	return render_template('login.html', title='Register', error=error, form=form)
 
@@ -116,16 +118,16 @@ def profile():
 	if form.validate_on_submit():
 		if request.method == 'POST':
 			file = request.files['file']
-			print file
+			#print file
 			if file and allowed_file(file.filename):
 				filename = secure_filename(file.filename)
 				#print 'filename'+filename
 				file.save(os.path.join(IMAGE_SRC, filename))
-				path = '/static/'+filename
+				#path = '/static/'+filename
 				#print 'path'+path
 				db.session.query(User).filter_by(uid=g.user.uid).update({"pic":filename})
 				db.session.commit()
-				print '#######################'+g.user.pic
+				#print '#######################'+g.user.pic
 				return redirect(url_for('profile'))
 			else:
 				db.session.query(User).filter_by(uid=g.user.uid).update({"pic":''})
@@ -168,15 +170,42 @@ def edit():
 			return render_template('profile.html', user=g.user)
 	return render_template('edit.html', form=form)
 
-
-
-
-
-
-
-
-
-
+@app.route('/wall', methods=['GET','POST'])
+@app.route('/wall/<wid>', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def wall(wid):
+	form = PostForm()
+	error = None
+	pic = ''
+	#print '***************************************'
+	if form.validate_on_submit():
+		content = form.content.data
+		posted = datetime.utcnow()
+		if request.method == 'POST':
+			file = request.files['file']
+			#print 'request'
+			if file and allowed_file(file):
+				pic = secure_filename(file.filename)
+				file.save(os.path.join(IMAGE_SRC, pic))
+				post = Post(writer=g.user.id, wid=wid, content=form.content.data, pic=pic, posted=posted)
+				db.session.add(post)
+				db.session.commit()
+				#print 'redirect @@@@@@@@@@@@@@@@@@@@@@@'
+				print 'REDIRECT[1]: wall_id'+wid
+				return redirect(url_for('wall',wid=wid))
+			else:
+				post = Post(writer=g.user.uid, wid=wid, content=form.content.data, pic='', posted=posted)
+				db.session.add(post)
+				db.session.commit()
+				print 'REDIRECT[2]: wall_id'+wid
+				return redirect(url_for('wall',wid=wid))
+		
+	belongs = User.query.filter_by(uid=wid).first()
+	wall = Post.query.filter(Post.wid == wid).order_by(Post.pid.desc())
+	print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
+	return render_template("wall.html", form=form, wall=wall, belongs=belongs, writer=g.user)
+	
 
 
 

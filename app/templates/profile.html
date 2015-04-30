@@ -19,13 +19,13 @@
 	</div>
 	
 	<form class="form-signin" action="" method="post" enctype="multipart/form-data">
-       	{{form.csrf_token}}
+       	{{form.hidden_tag()}}
+        {{form.csrf_token}}
 		<input type="file" onchange="onFileSelected(event)" name="file" data-filename-placement="inside">
 		<br>
 		<a class="btn btn-large btn-success"  href="{{url_for('edit')}}">Edit Profile</a>
 		<input type="submit" class="btn btn-large btn-success" value="Save pictures">
 	</form>
-	
 	
 
 </div>

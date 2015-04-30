@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container marketing" align="center">
+
+	<h1><b>{{belongs.firstname}}'s wall</b></h1>
+	<br>
+	<form actoin="" method="post" name="wall" enctype="multipart/form-data">
+		{{form.hidden_tag()}}
+       	{{form.csrf_token}}
+       	<div>
+       		<img src="{{url_for('static', filename=writer.pic)}}" class="img-polaroid" style="display:inline-block; width:200px; height:220px; border:1px solid black;"> 
+			<div style="width:300px;display:inline-block;vertical-align:middle;">
+				<div style="width: 300px;padding-bottom:2px" align="left">	
+					<b>{{writer.firstname}} {{writer.lastname}}</b><br>
+					<b>({{writer.email}})</b>
+				</div>
+				<div style="display:inline-block;width:300px;">
+					{{ form.content(class="uiTextareaAutogrow input autofocus mentionsTextarea textInput", placeholder="What's on your mind?", style="width: 300px; height: 120px;")}}
+					<input type="file" onchange="onFileSelected(event)" name="file" data-filename-placement="inside">
+					<input type="submit" class="btn btn-large btn-success" value="Post">
+				</div>
+			</div>
+		</div>		
+	</form>
+	
+	<hr>
+
+	haha<br>
+	{% for post in wall.items %}
+		{% include 'post.html' %}
+		hoho
+		<br>
+	{% endfor %}
+	haha
+	<hr>
+
+</div>
+
+{% endblock %}
