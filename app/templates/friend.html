@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-	
+	<div class="container marketing">
+		<div class="row">
+			{% for user in users %}
+				{% include 'user.html' %}
+			{% endfor %}
+		<div class="row">
+	</div>
 {% endblock %}

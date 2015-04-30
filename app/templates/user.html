@@ -1,8 +1,8 @@
 <div class="col-lg-4">
 	<div align="middle">
-		<img class="img-circle" src="{{url_for('static', filename = g.user.pic)}}" alt="Generic placeholder image" width="140" height="140">
+		<img class="img-circle" src="{{url_for('static', filename = user.pic)}}" alt="Generic placeholder image" width="140" height="140">
 	</div>
-	<h2>{{g.user.firstname}} {{g.user.lastname}}</h2>
-	<h4>{{g.user.email}}</h4>
-	<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+	<h2>{{user.firstname}} {{user.lastname}}</h2>
+	<h4>{{user.email}}</h4>
+	<p><a class="btn btn-default" href="#" role="button">Send Request</a></p>
 </div>

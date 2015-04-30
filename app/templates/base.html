@@ -30,7 +30,7 @@
 
         <!-- Custom styles for this template -->
         <link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
-        
+
         <link href="http://getbootstrap.com/examples/carousel/carousel.css" rel="stylesheet">
 
     </head>
@@ -58,8 +58,7 @@
                             {% if g.user.is_authenticated() %}
                                 <li><a href="{{ url_for('newsfeed',wid=g.user.uid) }}">Newsfeed</a></li>
                                 <li><a href="{{ url_for('wall',wid=g.user.uid) }}">Wall</a></li>
-                                <li><a href="{{ url_for('friend') }}">Friends</a></li>
-                                <li><a href="{{ url_for('find') }}">Request</a></li>
+                                <li><a href="{{ url_for('friend') }}">Friend</a></li>
                                 <li><a href="{{ url_for('profile') }}">Profile</a></li>
                                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
                                 {% if g.user.email == 'yhong@purdue.edu' %}

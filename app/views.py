@@ -1,6 +1,6 @@
 from app import app, db, login_manager, service, csrf, os
 from flask import flash, render_template, request, session, redirect, url_for, g, send_from_directory
-from models import User, Post, Request
+from models import User, Post, Request, Friend
 from forms import LoginForm, RegisterForm, EditForm, ProfileForm, PostForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
@@ -168,7 +168,7 @@ def edit():
 			db.session.query(User).filter_by(uid=g.user.uid).update({"lastname":lastname})
 			db.session.query(User).filter_by(uid=g.user.uid).update({"password":g.user.hash_password(new_password)})
 			db.session.commit()
-			return render_template('profile.html', user=g.user)
+			return redirect(url_for('profile'))
 	return render_template('edit.html', form=form)
 
 @app.route('/wall', methods=['GET','POST'])
@@ -221,20 +221,13 @@ def hack():
 	return redirect(url_for('newsfeed',wid=g.user.uid))
 
 
-@app.route('/friends', methods=['GET','POST'])
+@app.route('/friend', methods=['GET','POST'])
 @login_required
 @csrf.exempt
 def friend():
-	users = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).order_by(Friend.since.desc()).all()
-	return render_template('friend.html')
-
-@app.route('/find')
-@login_required
-@csrf.exempt
-def find():
-	subquery = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).all()
-	users = db.session.query(User,Friend).filter(~User.uid.in_(subquery))
-	return render_template('find.html')
+	users = db.session.query(User).filter(User.uid!=g.user.uid).order_by(User.uid).all()
+	print users
+	return render_template('friend.html',users=users)
 
 @app.route('/newsfeed', methods=['GET','POST'])
 @app.route('/newsfeed/<wid>', methods=['GET', 'POST'])

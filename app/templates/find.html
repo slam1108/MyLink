@@ -2,7 +2,9 @@
 {% block content %}
 	<div class="container marketing">
 		<div class="row">
-			{% include 'user.html' %}
+			{% for user in users %}
+				{% include 'user.html' %}
+			{% endfor %}
 		<div class="row">
 	</div>
 {% endblock %}
