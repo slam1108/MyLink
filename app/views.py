@@ -203,6 +203,8 @@ def wall(wid):
 		
 	belongs = User.query.filter_by(uid=wid).first()
 	wall = Post.query.filter(Post.wid == wid).order_by(Post.pid.desc())
+	wall = db.session.query(User,Post).filter(Post.wid==wid).filter(User.uid==wid).all()
+	print wall
 	print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
 	return render_template("wall.html", form=form, wall=wall, belongs=belongs, writer=g.user)
 	

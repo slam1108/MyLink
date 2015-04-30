@@ -1,15 +1,19 @@
 <div>
-	<img src="{{url_for('static', filename=post.writer.pic)}}" class="img-polaroid" style="display:inline-block; width:200px; height:220px; border:1px solid black;"> 
-	<div style="width:300px;display:inline-block;vertical-align:middle;">
+	<img src="{{url_for('static', filename=post.User.pic)}}" class="img-polaroid" style="display:inline-block; width:200px; height:220px; border:1px solid black;"> 
+	<div style="width:300px;display:inline-block;vertical-align:top;">
 		<div style="width: 300px;padding-bottom:2px" align="left">	
-			<b>{{post.writer.firstname}} {{post.writer.lastname}}</b><br>
-			<b>({{post.writer.email}})</b>
-			<i><small><em>{{post.posted}}</em></p></small></i>
+			<b>{{post.User.firstname}} {{post.User.lastname}}</b><br>
+			<b>({{post.User.email}})</b><br>
+			<i><small><em>{{post.Post.posted}}</em></p></small></i>
+			<hr>
 		</div>
-		<div style="display:inline-block;width:300px;">
-			{{ post.content(class="uiTextareaAutogrow input autofocus mentionsTextarea textInput", placeholder="What's on your mind?", style="width: 300px; height: 120px;")}}
-			<img src="{{url_for('static', filename=post.pic)}}" class="img-polaroid" style=" width:300px; height:220px; border:1px solid black;"> 
+		<div style="display:inline-block;width:300px;" align="left">
+			{{ post.Post.content }}
+			{% if post.Post.pic != '': %}
+				<img src="{{url_for('static', filename=post.pic)}}" class="img-polaroid" style=" width:300px; height:220px; border:1px solid black;"> 
+			{% endif %}
 		</div>
 	</div>
 </div>
+<hr>
 
