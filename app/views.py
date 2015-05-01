@@ -57,13 +57,13 @@ def login():
 	return render_template('login.html', title='Register', error=error, form=form)
 
 
-@app.route('/activate_account/<uid>')
+@app.route('/activate_account/<int:uid>')
 @csrf.exempt
 def activate_account(uid):
 	user = User.query.filter_by(uid=uid).first()
 	db.session.query(User).filter_by(uid=uid).update({"activate":True})
 
-	users = db.session.query(User).filter_by(User.uid!=uid).all()
+	users = db.session.query(User).filter(User.uid!=uid).all()
 	
 	# make connection with other users
 	for u in users:
@@ -194,7 +194,7 @@ def wall(wid):
 		content = form.content.data
 		posted = datetime.utcnow()
 		if request.method == 'POST':
-			#file = request.files['file']
+			file = request.files['file']
 			#print 'request'
 			if file and allowed_file(file.filename):
 				pic = secure_filename(file.filename)
@@ -228,12 +228,9 @@ def hack():
 		for u in users:
 			db.session.query(User).filter_by(uid=u.uid).update({"activate":True})
 		db.session.commit()
-
 		
 		users_1 = db.session.query(User).all()
 		users_2 = db.session.query(User).all()
-
-		
 
 		rs = db.session.query(Request).all()
  
@@ -286,9 +283,11 @@ def unfriend(sender, receiver):
 	f1 = db.session.query(Friend).filter(Friend.uid==sender).filter(Friend.fid==receiver).all()
 	for f in f1:
 		db.session.delete(f)
+
 	f2 = db.session.query(Friend).filter(Friend.uid==receiver).filter(Friend.fid==sender).all()
-	for f in f2:
-		db.session.delete(f)
+	for a in f2:
+		db.session.delete(a)
+
 	db.session.commit()
 	return redirect(url_for('cancel_request',sender=sender, receiver=receiver))
 
@@ -296,8 +295,8 @@ def unfriend(sender, receiver):
 @login_required
 @csrf.exempt
 def send_request(sender, receiver):
-	print 's='+sender
-	print 'r='+receiver
+	#print 's='+sender
+	#print 'r='+receiver
 	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
 	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=False, connected=True, sent=True)
 	db.session.delete(req1)
@@ -348,8 +347,8 @@ def cancel_request(sender, receiver):
 @login_required
 @csrf.exempt
 def accept_request(sender, receiver):
-	print 's='+sender
-	print 'r='+receiver
+	#print 's='+sender
+	#print 'r='+receiver
 	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
 	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=True, connected=True, sent=False)
 	db.session.delete(req1)
@@ -360,8 +359,8 @@ def accept_request(sender, receiver):
 	db.session.delete(req2)
 	db.session.add(new_req2)
 
-	s = Friend(sender=sender, receiver=receiver, since=datetime.utcnow())
-	r = Friend(sender=receiver, receiver=sender, since=datetime.utcnow())
+	s = Friend(uid=sender, fid=receiver, since=datetime.utcnow())
+	r = Friend(uid=receiver, fid=sender, since=datetime.utcnow())
 	db.session.add(s)
 	db.session.add(r)
 	db.session.commit()
@@ -390,7 +389,7 @@ def newsfeed(wid):
 		content = form.content.data
 		posted = datetime.utcnow()
 		if request.method == 'POST':
-			#file = request.files['file']
+			file = request.files['file']
 			#print 'request'
 			if file and allowed_file(file.filename):
 				pic = secure_filename(file.filename)
@@ -410,7 +409,15 @@ def newsfeed(wid):
 				return redirect(url_for('wall',wid=wid))
 		
 	belongs = User.query.filter_by(uid=wid).first()
-	wall = db.session.query(User,Post).filter(Post.wid==wid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+
+	wall = []
+
+	friends= db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
+	posts = db.session.query(User,Post).filter(Post.wid!=wid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+	for post in posts:
+		for friend in friends:
+			if post.Post.wid==friend.fid:
+				wall.append(post)
 	#print wall
 	#print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
 	return render_template("newsfeed.html", form=form, wall=wall, belongs=belongs, writer=g.user)
