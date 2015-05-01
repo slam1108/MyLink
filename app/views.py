@@ -64,13 +64,17 @@ def activate_account(uid):
 	db.session.query(User).filter_by(uid=uid).update({"activate":True})
 
 	users = db.session.query(User).filter(User.uid!=uid).all()
-	
+	circles = db.session.query(Circle).all()
 	# make connection with other users
 	for u in users:
 		r0 = Request(sender=uid, receiver=u.uid, done=False, connected=False, sent=False)
 		r1 = Request(sender=u.uid, receiver=uid, done=False, connected=False, sent=False)
 		db.session.add(r0)
 		db.session.add(r1)
+
+	for circle in circles:
+		ci = CircleItem(cid=circle.cid, uid=uid, added=False)
+		db.session.add(ci)
 
 	db.session.commit()
 	return render_template('activate.html')
@@ -436,6 +440,17 @@ def circle():
 		circle = Circle(owns=g.user.uid, name=name)
 		db.session.add(circle)
 		db.session.commit()
+
+		c = db.session.query(Circle).filter(Circle.owns==g.user.uid).filter(Circle.name==name).first()
+		users = db.session.query(User).all()
+		for user in users:
+			ci = CircleItem(cid=c.cid,uid=user.uid,added=False)
+			db.session.add(ci)
+
+		db.session.commit()
+
+		#print db.session.query(CircleItem).all()
+
 		return redirect(url_for('circle'))
 
 	circles = db.session.query(Circle).filter(Circle.owns==g.user.uid).all()
@@ -453,7 +468,13 @@ def delete_circle(cid):
 	for c in circle:
 		db.session.delete(c)
 
+	items = db.session.query(CircleItem).filter(CircleItem.cid==cid).all()
+	for item in items:
+		db.session.delete(item)
+
 	db.session.commit()
+
+	#print db.session.query(CircleItem).all()
 
 	return redirect(url_for('circle'))
 
@@ -462,29 +483,39 @@ def delete_circle(cid):
 @login_required
 @csrf.exempt
 def circleUsers(cid):
+
+	outCircle = db.session.query(User,Friend,CircleItem).filter(Friend.uid==g.user.uid).\
+			filter(Friend.fid==User.uid).filter(CircleItem.uid==Friend.fid).\
+			filter(CircleItem.cid==cid).filter(CircleItem.added==False).all()
+
+	inCircle = db.session.query(User,Friend,CircleItem).filter(Friend.uid==g.user.uid).\
+			filter(Friend.fid==User.uid).filter(CircleItem.uid==Friend.fid).\
+			filter(CircleItem.cid==cid).filter(CircleItem.added==True).all()
+
 	circle = db.session.query(Circle).filter(Circle.cid==cid).first()
 	users = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).\
 			filter(Friend.fid==User.uid).all()
-	#filter(Friend.fid==User.uid).filter(User.uid!=g.user.uid).all()
-	inCircle = db.session.query(User,Friend,CircleItem).filter(Friend.uid==g.user.uid).\
-			filter(Friend.fid==User.uid).filter(CircleItem.cid==cid).all()
-	outcircle
-	friends = db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
-	waitings = db.session.query(Request).filter(Request.done==False).filter(Request.connected==True).filter(Request.sent==True).filter(Request.sender==g.user.uid).all()
+
+	print inCircle
+	#outCircle = select1.except_(select2).all()
 	#print '#####'
 	#print accepts
 	#print '######'
 	#print users
-	return render_template('circleUsers.html', circle=circle, users=users, friends=friends, cid=cid, waitings=waitings)
+	return render_template('circleUsers.html', circle=circle, users=users, inCircle=inCircle, outCircle=outCircle, cid=cid)
 
 @app.route('/addCircleItem', methods=['GET','POST'])
 @app.route('/addCircleItem/<cid>_<uid>', methods=['GET','POST'])
 @login_required
 @csrf.exempt
 def addCircleItem(cid, uid):
-	ci = CircleItem(cid=cid, uid=uid)
+	circles = db.session.query(CircleItem).filter(CircleItem.cid==cid).filter(CircleItem.uid==uid).all()
+	for c in circles:
+		db.session.delete(c)
+	ci = CircleItem(cid=cid, uid=uid, added=True)
 	db.session.add(ci)
 	db.session.commit()
+
 	return redirect(url_for('circleUsers',cid=cid))
 
 @app.route('/deleteCircleItem', methods=['GET','POST'])
@@ -492,11 +523,45 @@ def addCircleItem(cid, uid):
 @login_required
 @csrf.exempt
 def deleteCircleItem(cid, uid):
-	circles = db.db.session.query(CircleItem).filter(CircleItem.cid==cid).filter(CircleItem.uid==uid).all()
+	circles = db.session.query(CircleItem).filter(CircleItem.cid==cid).filter(CircleItem.uid==uid).all()
 	for c in circles:
-		delete(c)
+		db.session.delete(c)
+	ci = CircleItem(cid=cid, uid=uid, added=False)
+	db.session.add(ci)
 	db.session.commit()
+
 	return redirect(url_for('circleUsers',cid=cid))
+
+@app.route('/reset_circle_item')
+@login_required
+@csrf.exempt
+def reset_circle_item():
+	users = db.session.query(User).all()
+	circles = db.session.query(Circle).all()
+
+	items = db.session.query(CircleItem).all()
+	for item in items:
+		db.session.delete(item)
+
+	for user in users:
+		for circle in circles:
+			ci = CircleItem(cid=circle.cid, uid=user.uid, added=False)
+			db.session.add(ci)
+
+	db.session.commit()
+
+	print db.session.query(CircleItem).all()
+	return redirect(url_for('newsfeed', wid=g.user.uid))
+
+
+
+
+
+
+
+
+
+
 
 
 

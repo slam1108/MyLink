@@ -7,8 +7,6 @@
 
 	<div class="container marketing">
 
-		
-
 		<div class="row">
 			{% for user in users %}
 				<div class="col-lg-4">
@@ -17,15 +15,15 @@
 					</div>
 					<h2>{{user.User.firstname}} {{user.User.lastname}}</h2>
 					<h4>{{user.User.email}}</h4>
-					{% for friend in friends %}
-						{% if user.User.uid == friend.fid %}
-							<p><a class="btn btn-default" href="{{url_for('addCircleItem',cid=cid, uid=user.User.uid)}}" role="button" style="color:green">Add</a></p>
+					{% for ic in inCircle %}
+						{% if user.User.uid == ic.Friend.fid %}
+							<p><a class="btn btn-default" href="{{url_for('deleteCircleItem',cid=cid, uid=user.User.uid)}}" role="button" style="color:green">Delete</a></p>
 						{% endif %}
 					{% endfor %}
 
-					{% for waiting in waitings %}
-						{% if user.User.uid == waiting.receiver %}
-							<p><a class="btn btn-default" href="{{ url_for('deleteCircleItem', cid, uid=user.User.uid)}}" role="button" style="color:Red">Delete</a></p>
+					{% for oc in outCircle %}
+						{% if user.User.uid == oc.Friend.fid %}
+							<p><a class="btn btn-default" href="{{ url_for('addCircleItem', cid=cid, uid=user.User.uid)}}" role="button" style="color:Red">Add</a></p>
 						{% endif %}
 					{% endfor %}
 				</div>

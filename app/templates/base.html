@@ -65,7 +65,7 @@
                                 <li><a href="{{ url_for('profile') }}">Profile</a></li>
                                 {% if g.user.email == 'yhong@purdue.edu' %}
                                     <li><a href="{{ url_for('hack') }}" style="color:red">* Activate</a></li>
-                                    <li><a href="#" style="color:red">* Delete Posts</a></li>
+                                    <li><a href="{{ url_for('reset_circle_item') }}" style="color:red">* Reset CircleItem</a></li>
                                     <!--<li><a href="{{ url_for('delete_user') }}" style="color:red">* Delete Users</a></li>-->
                                 {% endif %}
                                 <li><a href="{{ url_for('logout') }}">Logout</a></li>

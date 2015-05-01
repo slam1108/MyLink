@@ -138,7 +138,7 @@ class Circle(db.Model):
 	name = db.Column(db.String(100))
 
 	def __repr__(self):
-		return '<Circle[%r]:[%s]%s>' % (self.owner, self.cid, self.name)
+		return '<Circle[%r]:[%s]%s>' % (self.owns, self.cid, self.name)
 
 	def __init__(self, owns, name):
 		self.owns = owns
@@ -154,13 +154,15 @@ class CircleItem(db.Model):
 	iid = db.Column(db.Integer, primary_key=True)
 	cid = db.Column(db.Integer, db.ForeignKey('circle.cid')) # circle id
 	uid = db.Column(db.Integer, db.ForeignKey('user.uid')) # follower
+	added = db.Column(db.Boolean)
 
 	def __repr__(self):
 		return '<CircleItem %r>' % (self.iid)
 
-	def __init__(self, cid, uid):
+	def __init__(self, cid, uid, added):
 		self.cid = cid
 		self.uid = uid
+		self.added = added
 
 	def get_id(self):
 		try:
@@ -168,8 +170,23 @@ class CircleItem(db.Model):
 		except NameError:
 			return str(self.iid)
 
+class Post_Circle(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	pid = db.Column(db.Integer, db.ForeignKey('post.pid'))
+	cid = db.Column(db.Integer, db.ForeignKey('circle.cid'))
 
-	
+	def __repr__(self):
+		return '<P-C Relation %r>' % (self.id)
+
+	def __init__(self, pid, cid):
+		self.pid = pid
+		self.cid = cid
+
+	def get_id(self):
+		try:
+			return unicode(self.id)
+		except NameError:
+			return str(self.id)
 
 
 
