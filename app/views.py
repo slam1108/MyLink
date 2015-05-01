@@ -1,7 +1,7 @@
 from app import app, db, login_manager, service, csrf, os
 from flask import flash, render_template, request, session, redirect, url_for, g, send_from_directory
-from models import User, Post, Request, Friend
-from forms import LoginForm, RegisterForm, EditForm, ProfileForm, PostForm
+from models import User, Post, Request, Friend, Circle, CircleItem
+from forms import LoginForm, RegisterForm, EditForm, ProfileForm, PostForm, CircleForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
 from werkzeug import secure_filename
@@ -413,15 +413,23 @@ def newsfeed(wid):
 	wall = []
 
 	friends= db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
-	posts = db.session.query(User,Post).filter(Post.writer!=g.user.uid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+	posts = db.session.query(User,Post).filter(Post.wid!=g.user.uid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
 	for post in posts:
 		for friend in friends:
-			if post.Post.wid==friend.fid:
+			if post.Post.writer==friend.fid:
 				wall.append(post)
 	#print wall
 	#print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
 	return render_template("newsfeed.html", form=form, wall=wall, belongs=belongs, writer=g.user)
 	
+@app.route('/circle', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def circle():
+	form = CircleForm()
+	error = None
+	
+	return render_template("circle.html", form=form, writer=g.user)
 
 
 

@@ -6,7 +6,7 @@
 	<h4>{{user.email}}</h4>
 	{% for friend in friends %}
 		{% if user.uid == friend.fid %}
-			<a href="{{url_for('wall',wid=user.uid)}}"><b>{{user.firstname}}'s wall</b></a>
+			<p><a class="btn btn-default" href="{{url_for('wall',wid=user.uid)}}" role="button" style="color:green">Go to Wall</a></p>
 			<p><a class="btn btn-default" href="{{ url_for('unfriend',sender=friend.uid,receiver=friend.fid,) }}" role="button" style="color:red">Unfriend</a></p>
 		{% endif %}
 	{% endfor %}
@@ -20,6 +20,7 @@
 	{% for accept in accepts %}
 		{% if user.uid == accept.sender %}
 			<p><a class="btn btn-default" href="{{ url_for('accept_request', sender=accept.sender, receiver=g.user.uid)}}" role="button" style="color:green">Accept Request</a></p>
+			<p><a class="btn btn-default" href="{{ url_for('cancel_request', sender=g.user.uid, receiver=accept.sender)}}" role="button" style="color:red">Deny Request</a></p>
 		{% endif %}
 	{% endfor %}
 
