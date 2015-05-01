@@ -284,9 +284,11 @@ def friend():
 @csrf.exempt
 def unfriend(sender, receiver):
 	f1 = db.session.query(Friend).filter(Friend.uid==sender).filter(Friend.fid==receiver).all()
-	db.session.delete(f1)
+	for f in f1:
+		db.session.delete(f)
 	f2 = db.session.query(Friend).filter(Friend.uid==receiver).filter(Friend.fid==sender).all()
-	db.session.delete(f2)
+	for f in f2:
+		db.session.delete(f)
 	db.session.commit()
 	return redirect(url_for('cancel_request',sender=sender, receiver=receiver))
 
@@ -320,8 +322,8 @@ def send_request(sender, receiver):
 @login_required
 @csrf.exempt
 def cancel_request(sender, receiver):
-	print 's='+sender
-	print 'r='+receiver
+	#print 's='+sender
+	#print 'r='+receiver
 	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
 	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=False, connected=False, sent=False)
 	db.session.delete(req1)
