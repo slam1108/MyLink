@@ -419,7 +419,7 @@ def newsfeed(wid):
 				db.session.commit()
 				#print 'redirect @@@@@@@@@@@@@@@@@@@@@@@'
 				#print 'REDIRECT[1]: wall_id'+wid
-
+				'''
 				ppp = db.session.query(Post).filter(Post.content==form.content.data).filter(Post.posted==posted).first()
 			
 				ccircles = db.session.query(Circle).all()
@@ -437,7 +437,7 @@ def newsfeed(wid):
 					db.session.delete(temp)
 					pa = Post_auth(pid=ppp.pid, cid=post_circle.cid, used=True)
 					db.session.add(pa)
-				db.sessoin.commit()
+				db.sessoin.commit()'''
 
 				return redirect(url_for('wall',wid=wid))
 			else:
@@ -445,7 +445,7 @@ def newsfeed(wid):
 				db.session.add(post)
 				db.session.commit()
 				#print 'REDIRECT[2]: wall_id'+wid
-
+				'''
 				ppp = db.session.query(Post).filter(Post.content==form.content.data).filter(Post.posted==posted).first()
 			
 				ccircles = db.session.query(Circle).all()
@@ -463,7 +463,7 @@ def newsfeed(wid):
 					db.session.delete(temp)
 					pa = Post_auth(pid=ppp.pid, cid=post_circle.cid, used=True)
 					db.session.add(pa)
-				db.session.commit()
+				db.session.commit()'''
 
 				return redirect(url_for('wall',wid=wid))
 		
