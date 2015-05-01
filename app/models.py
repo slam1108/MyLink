@@ -70,27 +70,47 @@ class Post(db.Model):
 	def __repr__(self):
 		return '<Post %r>' % (self.content)
 
+	def get_id(self):
+		try:
+			return unicode(self.pid)
+		except NameError:
+			return str(self.pid)
+
 class Request(db.Model):
 	rid = db.Column(db.Integer, primary_key=True)
 	sender = db.Column(db.Integer, db.ForeignKey('user.uid'))
 	receiver = db.Column(db.Integer, db.ForeignKey('user.uid'))
-	confirmed = db.Column(db.Boolean)
+	done = db.Column(db.Boolean)
+	connected = db.Column(db.Boolean)
+	sent = db.Column(db.Boolean)
 
-	def __init__(self, sender, receiver):
+	def __repr__(self):
+		return '<Request[%s] %r_%r>' % (self.rid, self.sender, self.receiver)
+
+	def __init__(self, sender, receiver, done, connected, sent):
 		self.sender = sender
 		self.receiver = receiver
-		self.confirmed = False
+		self.done = done
+		self.connected = connected
+		self.sent = sent;
 
-	def confirm(self):
-		self.confirmed = True
+	def mutual(self):
+		self.done = True
 		s = Friend(self.sender, self.receiver)
 		r = Friend(self.receiver, self.sender)
 		db.session.add(s)
 		db.session.add(r)
 		db.session.commit()
 
-	def __repr__(self):
-		return '<Request %r>' % (self.rid)
+	def getConnected(self):
+		return self.connected
+
+	def get_id(self):
+		try:
+			return unicode(self.rid)
+		except NameError:
+			return str(self.rid)
+	
 
 class Friend(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -98,13 +118,21 @@ class Friend(db.Model):
 	fid = db.Column(db.Integer, db.ForeignKey('user.uid'))
 	since = db.Column(db.DateTime)
 
-	def __init__(self, uid, fid):
+	def __repr__(self):
+		return '<Friend %r>' % (self.id)
+
+	def __init__(self, uid, fid, since):
 		self.uid = uid;
 		self.fid = fid;
-		self.since = datetime.utcnow()
+		self.since = since
 
-	def __repr__(self):
-		return '<Friend %r>' % (self.uid)
+	def get_id(self):
+		try:
+			return unicode(self.id)
+		except NameError:
+			return str(self.id)
+
+	
 
 
 

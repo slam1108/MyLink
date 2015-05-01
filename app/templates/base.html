@@ -49,6 +49,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
                         </button>
 
                         <a class="navbar-brand">MyLink</a>
@@ -60,10 +61,11 @@
                                 <li><a href="{{ url_for('wall',wid=g.user.uid) }}">Wall</a></li>
                                 <li><a href="{{ url_for('friend') }}">Friend</a></li>
                                 <li><a href="{{ url_for('profile') }}">Profile</a></li>
-                                <li><a href="{{ url_for('logout') }}">Logout</a></li>
                                 {% if g.user.email == 'yhong@purdue.edu' %}
-                                    <li><a href="{{ url_for('hack') }}">* Hack [!!]</a></li>
+                                    <li><a href="{{ url_for('hack') }}" style="color:red">* Activate</a></li>
+                                    <!--<li><a href="{{ url_for('delete_user') }}" style="color:red">* Delete Users</a></li>-->
                                 {% endif %}
+                                <li><a href="{{ url_for('logout') }}">Logout</a></li>
                             {% else %}
                                 <li class="active"><a href="{{ url_for('intro') }}">Home</a></li>
                                 <li><a href="{{ url_for('login') }}">Login</a></li>

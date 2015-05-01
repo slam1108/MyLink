@@ -62,6 +62,16 @@ def login():
 def activate_account(uid):
 	user = User.query.filter_by(uid=uid).first()
 	db.session.query(User).filter_by(uid=uid).update({"activate":True})
+
+	users = db.session.query(User).filter_by(User.uid!=uid).all()
+	
+	# make connection with other users
+	for u in users:
+		r0 = Request(sender=uid, receiver=u.uid, done=False, connected=False, sent=False)
+		r1 = Request(sender=u.uid, receiver=uid, done=False, connected=False, sent=False)
+		db.session.add(r0)
+		db.session.add(r1)
+
 	db.session.commit()
 	return render_template('activate.html')
 
@@ -104,7 +114,7 @@ def register():
 		else:
 			user = User(firstname=firstname, lastname=lastname, email=email,
 						password=password, pic=pic, activate=activate)
-			db.session.add(user)
+			db.session.add(user);
 			db.session.commit()
 			service.send_activate(user)
 			return render_template('welcome.html')
@@ -218,6 +228,39 @@ def hack():
 		for u in users:
 			db.session.query(User).filter_by(uid=u.uid).update({"activate":True})
 		db.session.commit()
+
+		
+		users_1 = db.session.query(User).all()
+		users_2 = db.session.query(User).all()
+
+		
+
+		rs = db.session.query(Request).all()
+ 
+		for r in rs :
+			db.session.delete(r)
+			db.session.commit()
+
+		for u1 in users_1:
+			for u2 in users_2:
+				if u1.uid==u2.uid:
+					continue
+				req = Request(sender=u1.uid, receiver=u2.uid, done=False, connected=False, sent=False)
+				db.session.add(req)
+				db.session.commit()
+
+	return redirect(url_for('newsfeed',wid=g.user.uid))
+
+
+@app.route('/delete_user')
+@login_required
+@csrf.exempt
+def delete_user():
+	if g.user.email == 'yhong@purdue.edu':
+		users = db.session.query(User).filter(User.uid!=g.user.uid).all()
+		for u in users:
+			db.session.delete(u)
+		db.session.commit()
 	return redirect(url_for('newsfeed',wid=g.user.uid))
 
 
@@ -225,9 +268,112 @@ def hack():
 @login_required
 @csrf.exempt
 def friend():
-	users = db.session.query(User).filter(User.uid!=g.user.uid).order_by(User.uid).all()
-	print users
-	return render_template('friend.html',users=users)
+	users = db.session.query(User).filter(User.uid!=g.user.uid).all()
+	friends = db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
+	waitings = db.session.query(Request).filter(Request.done==False).filter(Request.connected==True).filter(Request.sent==True).filter(Request.sender==g.user.uid).all()
+	accepts = db.session.query(Request).filter(Request.connected==True).filter(Request.sent==True).filter(Request.done==False).filter(Request.receiver==g.user.uid).all()
+	strangers = db.session.query(Request).filter(Request.sender==g.user.uid).filter(Request.connected==False).all()
+	#print '#####'
+	#print accepts
+	#print '######'
+	#print users
+	return render_template('friend.html', users=users, friends=friends, waitings=waitings, accepts=accepts, strangers=strangers)
+
+@app.route('/unfriend/<sender>_<receiver>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def unfriend(sender, receiver):
+	f1 = db.session.query(Friend).filter(Friend.uid==sender).filter(Friend.fid==receiver).all()
+	db.session.delete(f1)
+	f2 = db.session.query(Friend).filter(Friend.uid==receiver).filter(Friend.fid==sender).all()
+	db.session.delete(f2)
+	db.session.commit()
+	return redirect(url_for('cancel_request',sender=sender, receiver=receiver))
+
+@app.route('/send_request/<sender>_<receiver>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def send_request(sender, receiver):
+	print 's='+sender
+	print 'r='+receiver
+	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
+	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=False, connected=True, sent=True)
+	db.session.delete(req1)
+	db.session.add(new_req)
+
+	req2 = db.session.query(Request).filter(Request.sender==receiver).filter(Request.receiver==sender).first()
+	new_req2 = Request(sender=req2.sender, receiver=req2.receiver, done=False, connected=True, sent=False)
+	db.session.delete(req2)
+	db.session.add(new_req2)
+	db.session.commit()
+	
+	#db.session.query(Request).filter(Request.sender==sender and Request.receiver==receiver).update({"sent":True})
+	#db.session.query(Request).filter(Request.sender==receiver and Request.receiver==sender).update({"connected":True})
+	#db.session.commit()
+
+	#print db.session.query(Request).filter(Request.connected==True).all()
+	
+
+	return redirect(url_for('friend'))
+
+@app.route('/canel_request/<sender>_<receiver>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def cancel_request(sender, receiver):
+	print 's='+sender
+	print 'r='+receiver
+	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
+	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=False, connected=False, sent=False)
+	db.session.delete(req1)
+	db.session.add(new_req)
+
+	req2 = db.session.query(Request).filter(Request.sender==receiver).filter(Request.receiver==sender).first()
+	new_req2 = Request(sender=req2.sender, receiver=req2.receiver, done=False, connected=False, sent=False)
+	db.session.delete(req2)
+	db.session.add(new_req2)
+	db.session.commit()
+	
+	#db.session.query(Request).filter(Request.sender==sender and Request.receiver==receiver).update({"sent":True})
+	#db.session.query(Request).filter(Request.sender==receiver and Request.receiver==sender).update({"connected":True})
+	#db.session.commit()
+
+	#print db.session.query(Request).filter(Request.connected==True).all()
+	
+
+	return redirect(url_for('friend'))
+
+@app.route('/accept_request/<sender>_<receiver>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def accept_request(sender, receiver):
+	print 's='+sender
+	print 'r='+receiver
+	req1 = db.session.query(Request).filter(Request.sender==sender).filter(Request.receiver==receiver).first()
+	new_req = Request(sender=req1.sender, receiver=req1.receiver, done=True, connected=True, sent=False)
+	db.session.delete(req1)
+	db.session.add(new_req)
+
+	req2 = db.session.query(Request).filter(Request.sender==receiver).filter(Request.receiver==sender).first()
+	new_req2 = Request(sender=req2.sender, receiver=req2.receiver, done=True, connected=True, sent=True)
+	db.session.delete(req2)
+	db.session.add(new_req2)
+
+	s = Friend(sender=sender, receiver=receiver, since=datetime.utcnow())
+	r = Friend(sender=receiver, receiver=sender, since=datetime.utcnow())
+	db.session.add(s)
+	db.session.add(r)
+	db.session.commit()
+
+	db.session.commit()
+	
+	#db.session.query(Request).filter(Request.sender==sender and Request.receiver==receiver).update({"sent":True})
+	#db.session.query(Request).filter(Request.sender==receiver and Request.receiver==sender).update({"connected":True})
+	#db.session.commit()
+
+	#print db.session.query(Request).filter(Request.connected==True).all()
+	
+
+	return redirect(url_for('friend'))
 
 @app.route('/newsfeed', methods=['GET','POST'])
 @app.route('/newsfeed/<wid>', methods=['GET', 'POST'])

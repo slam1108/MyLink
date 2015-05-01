@@ -4,5 +4,27 @@
 	</div>
 	<h2>{{user.firstname}} {{user.lastname}}</h2>
 	<h4>{{user.email}}</h4>
-	<p><a class="btn btn-default" href="#" role="button">Send Request</a></p>
+	{% for friend in friends %}
+		{% if user.uid == friend.fid %}
+			<p><a class="btn btn-default" href="{{ url_for('unfriend',sender=friend.uid,receiver=friend.fid,) }}" role="button">Unfriend</a></p>
+		{% endif %}
+	{% endfor %}
+
+	{% for waiting in waitings %}
+		{% if user.uid == waiting.receiver %}
+			<p><a class="btn btn-default" href="{{ url_for('cancel_request', sender=g.user.uid, receiver=waiting.receiver)}}" role="button">Cancel Request</a></p>
+		{% endif %}
+	{% endfor %}
+
+	{% for accept in accepts %}
+		{% if user.uid == accept.sender %}
+			<p><a class="btn btn-default" href="{{ url_for('accept_request', sender=accept.sender, receiver=g.user.uid)}}" role="button">Accept Request</a></p>
+		{% endif %}
+	{% endfor %}
+
+	{% for stranger in strangers %}
+		{% if user.uid == stranger.receiver %}
+			<p><a class="btn btn-default" href="{{ url_for('send_request', sender=g.user.uid, receiver=stranger.receiver)}}" role="button">Send Request</a></p>
+		{% endif %}
+	{% endfor %}
 </div>
