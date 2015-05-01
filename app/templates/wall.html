@@ -2,9 +2,11 @@
 {% block content %}
 
 <div class="container marketing" align="center">
-
+	
 	<h1><b>{{belongs.firstname}}'s wall</b></h1>
 	<br>
+	<!--
+	
 	<form actoin="" method="post" name="wall" enctype="multipart/form-data">
 		{{form.hidden_tag()}}
        	{{form.csrf_token}}
@@ -26,10 +28,11 @@
 					</div>
 				</div>
 			</div>
-		</div>		
-	</form>
+		</div>	
+
+	<hr>	
+	</form>-->
 	
-	<hr>
 	{% for post in wall %}
 		{% include 'post.html' %}
 	{% endfor %}

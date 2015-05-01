@@ -172,15 +172,35 @@ class CircleItem(db.Model):
 
 class Post_Circle(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	pid = db.Column(db.Integer, db.ForeignKey('post.pid'))
+	uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
 	cid = db.Column(db.Integer, db.ForeignKey('circle.cid'))
 
 	def __repr__(self):
 		return '<P-C Relation %r>' % (self.id)
 
-	def __init__(self, pid, cid):
+	def __init__(self, uid, cid):
+		self.uid = uid
+		self.cid = cid
+
+	def get_id(self):
+		try:
+			return unicode(self.id)
+		except NameError:
+			return str(self.id)
+
+class Post_auth(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	pid = db.Column(db.Integer, db.ForeignKey('post.pid'))
+	cid = db.Column(db.Integer, db.ForeignKey('circle.cid'))
+	used = db.Column(db.Boolean)
+
+	def __repr__(self):
+		return '< Post_Auth %r>' % (self.id)
+
+	def __init__(self, pid, cid, used):
 		self.pid = pid
 		self.cid = cid
+		self.used = used
 
 	def get_id(self):
 		try:

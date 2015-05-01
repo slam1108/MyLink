@@ -1,6 +1,6 @@
 from app import app, db, login_manager, service, csrf, os
 from flask import flash, render_template, request, session, redirect, url_for, g, send_from_directory
-from models import User, Post, Request, Friend, Circle, CircleItem
+from models import User, Post, Request, Friend, Circle, CircleItem, Post_Circle, Post_auth
 from forms import LoginForm, RegisterForm, EditForm, ProfileForm, PostForm, CircleForm
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_wtf.csrf import CsrfProtect
@@ -385,9 +385,24 @@ def accept_request(sender, receiver):
 @login_required
 @csrf.exempt
 def newsfeed(wid):
+	'''
+	ppppp = db.session.query(Post).all()
+	ccccc = db.session.query(Circle).all()
+
+	for pppp in ppppp:
+		for cccc in ccccc:
+			aaaa = Post_auth(pid=pppp.pid, cid=cccc.cid, used=False)
+			db.session.add(aaaa)
+	db.session.commit()
+	'''
+
 	form = PostForm()
 	error = None
 	pic = ''
+
+	post_circles = db.session.query(Post_Circle, Circle).filter(Post_Circle.cid==Circle.cid).\
+					filter(Post_Circle.uid==g.user.uid).all()
+
 	#print '***************************************'
 	if form.validate_on_submit():
 		content = form.content.data
@@ -404,29 +419,83 @@ def newsfeed(wid):
 				db.session.commit()
 				#print 'redirect @@@@@@@@@@@@@@@@@@@@@@@'
 				#print 'REDIRECT[1]: wall_id'+wid
+
+				ppp = db.session.query(Post).filter(Post.content==form.content.data).filter(Post.posted==posted).first()
+			
+				ccircles = db.session.query(Circle).all()
+
+				for ccircle in ccircles:
+					ppa = Post_auth(pid=ppp.pid, cid=ccircle.cid, used=False)
+					db.session.add(ppa)
+				db.session.commit()
+
+				ccircles = db.session.query(Circle).all()
+
+				for ccircle in ccircles:
+					temp = db.session.query(Post_auth).filter(Post_auth.pid==ppp.pid).\
+						filter(Post_auth.cid==post_circle.cid).first()
+					db.session.delete(temp)
+					pa = Post_auth(pid=ppp.pid, cid=post_circle.cid, used=True)
+					db.session.add(pa)
+				db.sessoin.commit()
+
 				return redirect(url_for('wall',wid=wid))
 			else:
 				post = Post(writer=g.user.uid, wid=wid, content=form.content.data, pic='', posted=posted)
 				db.session.add(post)
 				db.session.commit()
 				#print 'REDIRECT[2]: wall_id'+wid
+
+				ppp = db.session.query(Post).filter(Post.content==form.content.data).filter(Post.posted==posted).first()
+			
+				ccircles = db.session.query(Circle).all()
+
+				for ccircle in ccircles:
+					ppa = Post_auth(pid=ppp.pid, cid=ccircle.cid, used=False)
+					db.session.add(ppa)
+				db.session.commit()
+
+				papas = db.session.query(Post_auth).all()
+
+				for post_circle in papas:
+					temp = db.session.query(Post_auth).filter(Post_auth.pid==ppp.pid).\
+						filter(Post_auth.cid==post_circle.cid).first()
+					db.session.delete(temp)
+					pa = Post_auth(pid=ppp.pid, cid=post_circle.cid, used=True)
+					db.session.add(pa)
+				db.session.commit()
+
 				return redirect(url_for('wall',wid=wid))
 		
 	belongs = User.query.filter_by(uid=wid).first()
 
 	wall = []
 
+	print db.session.query(User,Post,Post_Circle,CircleItem,Post_auth).filter(Post.wid==Post.writer).\
+			filter(User.uid==Post.writer).filter(Post_Circle.uid==Post.writer).\
+			filter(CircleItem.cid==Post_Circle.cid).filter(CircleItem.added==True).\
+			filter(Post_auth.cid==CircleItem.cid).filter(Post_auth.pid==Post.pid).\
+			order_by(Post.pid.desc()).all()
+
 	friends= db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
 	posts = db.session.query(User,Post).filter(Post.wid==Post.writer).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+	posts2 = db.session.query(User,Post,Post_Circle,CircleItem,Post_auth).filter(Post.wid==Post.writer).\
+			filter(User.uid==Post.writer).filter(Post_Circle.uid==Post.writer).\
+			filter(CircleItem.cid==Post_Circle.cid).filter(CircleItem.added==True).\
+			filter(Post_auth.used==True).\
+			order_by(Post.pid.desc()).all()
 	for post in posts:
 		for friend in friends:
 			if post.Post.writer==friend.fid:
-				wall.append(post)
+				#if(post.Post.writer==post.CircleItem.uid):
+					wall.append(post)
 			elif post.Post.writer==g.user.uid:
 				wall.append(post)
+
+	circles = db.session.query(Circle).filter(Circle.owns==g.user.uid).all()
 	#print wall
 	#print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
-	return render_template("newsfeed.html", form=form, wall=wall, belongs=belongs, writer=g.user)
+	return render_template("newsfeed.html", form=form, wall=wall, belongs=belongs, writer=g.user, circles=circles, post_circles=post_circles)
 	
 @app.route('/circle', methods=['GET','POST'])
 @login_required
@@ -553,9 +622,45 @@ def reset_circle_item():
 	print db.session.query(CircleItem).all()
 	return redirect(url_for('newsfeed', wid=g.user.uid))
 
+@app.route('/add_post_circle', methods=['GET','POST'])
+@app.route('/add_post_circle/<cid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def add_post_circle(cid):
 
+	ps = Post_Circle(uid=g.user.uid, cid=cid)
 
+	if db.session.query(Post_Circle).filter(Post_Circle.uid==g.user.uid).\
+			filter(Post_Circle.cid==cid).first() is None:
+		db.session.add(ps)
+		db.session.commit()
 
+	print db.session.query(Post_Circle).filter(Post_Circle.uid==g.user.uid).all()
+
+	return redirect(url_for('newsfeed',wid=g.user.uid))
+
+@app.route('/delete_post_circle', methods=['GET','POST'])
+@app.route('/delete_post_circle/<cid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def delete_post_circle(cid):
+
+	'''
+	pcs = db.session.query(Post_Circle).filter(Post_Circle.uid==g.user.uid).all()
+	for pc in pcs:
+		db.session.delete(pc)
+	db.session.commit()	'''
+
+	pcs = db.session.query(Post_Circle).filter(Post_Circle.uid==g.user.uid).\
+			filter(Post_Circle.cid==cid).first()
+
+	if pcs is not None:
+		db.session.delete(pcs)
+		db.session.commit()
+
+	print db.session.query(Post_Circle).filter(Post_Circle.uid==g.user.uid).all()
+
+	return redirect(url_for('newsfeed',wid=g.user.uid))
 
 
 

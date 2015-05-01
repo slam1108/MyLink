@@ -26,7 +26,27 @@
 					</div>
 				</div>
 			</div>
-		</div>		
+		</div>
+
+		<div style = "background:white;width:440px;border:1px dotted grey">
+			{% for post_circle in post_circles %}
+				{{ post_circle.Circle.name }}
+			{% endfor %}
+		</div>
+
+		{% for circle in circles %}
+			<div style="padding-top:5px">
+		       	<div style = "background:white;width:440px;border:1px dotted grey">
+					<div style="display:inline-block;width:430px;padding-bottom:10px; padding-top:10px">
+						<div align="left" style="display:inline-block;width: 250px; height: 30px;padding-left:10px">
+							<b>Circle: {{circle.name}}</b><br>
+						</div>
+						<a class="btn btn-large btn-success"  href="{{url_for('add_post_circle', cid=circle.cid)}}">Add</a>
+						<a class="btn btn-large btn-success"  href="{{url_for('delete_post_circle', cid=circle.cid)}}">Delete</a>
+					</div>
+				</div>		
+			</form>
+		{% endfor %}	
 	</form>
 	
 	<hr>
