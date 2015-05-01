@@ -132,6 +132,25 @@ class Friend(db.Model):
 		except NameError:
 			return str(self.id)
 
+class Circle(db.Model):
+	cid = db.Column(db.Integer, primary_key=True)
+	owns = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	name = db.Column(db.String(100))
+
+	def __repr__(self):
+		return '<Circle[%r]:[%s]%s>' % (self.owner, self.cid, self.name)
+
+	def __init__(self, owns, name):
+		owns = owns
+		name = name
+
+	def get_id(self):
+		try:
+			return unicode(self.cid)
+		except NameError:
+			return str(self.cid)
+
+
 	
 
 

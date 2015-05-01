@@ -413,7 +413,7 @@ def newsfeed(wid):
 	wall = []
 
 	friends= db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
-	posts = db.session.query(User,Post).filter(Post.wid!=wid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+	posts = db.session.query(User,Post).filter(Post.writer!=g.user.uid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
 	for post in posts:
 		for friend in friends:
 			if post.Post.wid==friend.fid:

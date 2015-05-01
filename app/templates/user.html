@@ -6,26 +6,26 @@
 	<h4>{{user.email}}</h4>
 	{% for friend in friends %}
 		{% if user.uid == friend.fid %}
-			<a href="{{url_for('wall',wid=user.uid)}}"><b>{{user.firstname}}'s wall</b><br></a>
-			<p><a class="btn btn-default" href="{{ url_for('unfriend',sender=friend.uid,receiver=friend.fid,) }}" role="button">Unfriend</a></p>
+			<a href="{{url_for('wall',wid=user.uid)}}"><b>{{user.firstname}}'s wall</b></a>
+			<p><a class="btn btn-default" href="{{ url_for('unfriend',sender=friend.uid,receiver=friend.fid,) }}" role="button" style="color:red">Unfriend</a></p>
 		{% endif %}
 	{% endfor %}
 
 	{% for waiting in waitings %}
 		{% if user.uid == waiting.receiver %}
-			<p><a class="btn btn-default" href="{{ url_for('cancel_request', sender=g.user.uid, receiver=waiting.receiver)}}" role="button">Cancel Request</a></p>
+			<p><a class="btn btn-default" href="{{ url_for('cancel_request', sender=g.user.uid, receiver=waiting.receiver)}}" role="button" style="color:Red">Cancel Request</a></p>
 		{% endif %}
 	{% endfor %}
 
 	{% for accept in accepts %}
 		{% if user.uid == accept.sender %}
-			<p><a class="btn btn-default" href="{{ url_for('accept_request', sender=accept.sender, receiver=g.user.uid)}}" role="button">Accept Request</a></p>
+			<p><a class="btn btn-default" href="{{ url_for('accept_request', sender=accept.sender, receiver=g.user.uid)}}" role="button" style="color:green">Accept Request</a></p>
 		{% endif %}
 	{% endfor %}
 
 	{% for stranger in strangers %}
 		{% if user.uid == stranger.receiver %}
-			<p><a class="btn btn-default" href="{{ url_for('send_request', sender=g.user.uid, receiver=stranger.receiver)}}" role="button">Send Request</a></p>
+			<p><a class="btn btn-default" href="{{ url_for('send_request', sender=g.user.uid, receiver=stranger.receiver)}}" role="button" style="color:blue">Send Request</a></p>
 		{% endif %}
 	{% endfor %}
 </div>
