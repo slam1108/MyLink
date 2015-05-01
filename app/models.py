@@ -141,14 +141,32 @@ class Circle(db.Model):
 		return '<Circle[%r]:[%s]%s>' % (self.owner, self.cid, self.name)
 
 	def __init__(self, owns, name):
-		owns = owns
-		name = name
+		self.owns = owns
+		self.name = name
 
 	def get_id(self):
 		try:
 			return unicode(self.cid)
 		except NameError:
 			return str(self.cid)
+
+class CircleItem(db.Model):
+	iid = db.Column(db.Integer, primary_key=True)
+	cid = db.Column(db.Integer, db.ForeignKey('circle.cid')) # circle id
+	uid = db.Column(db.Integer, db.ForeignKey('user.uid')) # follower
+
+	def __repr__(self):
+		return '<CircleItem %r>' % (self.iid)
+
+	def __init__(self, cid, uid):
+		self.cid = cid
+		self.uid = uid
+
+	def get_id(self):
+		try:
+			return unicode(self.iid)
+		except NameError:
+			return str(self.iid)
 
 
 	
