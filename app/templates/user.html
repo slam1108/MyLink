@@ -6,6 +6,7 @@
 	<h4>{{user.email}}</h4>
 	{% for friend in friends %}
 		{% if user.uid == friend.fid %}
+			<a href="{{url_for('wall',wid=user.uid)}}"><b>{{user.firstname}}'s wall</b><br></a>
 			<p><a class="btn btn-default" href="{{ url_for('unfriend',sender=friend.uid,receiver=friend.fid,) }}" role="button">Unfriend</a></p>
 		{% endif %}
 	{% endfor %}
