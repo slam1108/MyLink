@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+	
+	<div align="center" class="container marketing" style="padding-bottom:80px">
+		<h1>Add Users to Circle of [{{ circle.name }}]</h1>
+	</div>
+
+	<div class="container marketing">
+
+		
+
+		<div class="row">
+			{% for user in users %}
+				<div class="col-lg-4">
+					<div align="middle">
+						<img class="img-circle" src="{{url_for('static', filename = user.User.pic)}}" alt="Generic placeholder image" width="140" height="140">
+					</div>
+					<h2>{{user.User.firstname}} {{user.User.lastname}}</h2>
+					<h4>{{user.User.email}}</h4>
+					{% for friend in friends %}
+						{% if user.User.uid == friend.fid %}
+							<p><a class="btn btn-default" href="{{url_for('addCircleItem',cid=cid, uid=user.User.uid)}}" role="button" style="color:green">Add</a></p>
+						{% endif %}
+					{% endfor %}
+
+					{% for waiting in waitings %}
+						{% if user.User.uid == waiting.receiver %}
+							<p><a class="btn btn-default" href="{{ url_for('deleteCircleItem', cid, uid=user.User.uid)}}" role="button" style="color:Red">Delete</a></p>
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% endfor %}
+		<div class="row">
+	</div>
+{% endblock %}

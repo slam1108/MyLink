@@ -31,8 +31,6 @@ class PostForm(Form):
 
 class CircleForm(Form):
 	name = TextField('name', validators=[Required()])
-	content = TextAreaField('content', validators=[Required()])
-	pic = FileField('')
 
 
 

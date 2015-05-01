@@ -413,10 +413,12 @@ def newsfeed(wid):
 	wall = []
 
 	friends= db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
-	posts = db.session.query(User,Post).filter(Post.wid!=g.user.uid).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
+	posts = db.session.query(User,Post).filter(Post.wid==Post.writer).filter(User.uid==Post.writer).order_by(Post.pid.desc()).all()
 	for post in posts:
 		for friend in friends:
 			if post.Post.writer==friend.fid:
+				wall.append(post)
+			elif post.Post.writer==g.user.uid:
 				wall.append(post)
 	#print wall
 	#print 'render: wid'+wid+' ^^^^^^^^^^^^^^^^^^^^^'
@@ -428,11 +430,73 @@ def newsfeed(wid):
 def circle():
 	form = CircleForm()
 	error = None
-	
-	return render_template("circle.html", form=form, writer=g.user)
+
+	if form.validate_on_submit():
+		name = form.name.data
+		circle = Circle(owns=g.user.uid, name=name)
+		db.session.add(circle)
+		db.session.commit()
+		return redirect(url_for('circle'))
+
+	circles = db.session.query(Circle).filter(Circle.owns==g.user.uid).all()
+
+	return render_template("circle.html", form=form, writer=g.user, circles=circles)
 
 
+@app.route('/delete_circle', methods=['GET','POST'])
+@app.route('/delete_circle/<cid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def delete_circle(cid):
+	circle = db.session.query(Circle).filter(Circle.cid==cid).all()
 
+	for c in circle:
+		db.session.delete(c)
+
+	db.session.commit()
+
+	return redirect(url_for('circle'))
+
+@app.route('/circleUsers', methods=['GET','POST'])
+@app.route('/circleUsers/<cid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def circleUsers(cid):
+	circle = db.session.query(Circle).filter(Circle.cid==cid).first()
+	users = db.session.query(User,Friend).filter(Friend.uid==g.user.uid).\
+			filter(Friend.fid==User.uid).all()
+	#filter(Friend.fid==User.uid).filter(User.uid!=g.user.uid).all()
+	inCircle = db.session.query(User,Friend,CircleItem).filter(Friend.uid==g.user.uid).\
+			filter(Friend.fid==User.uid).filter(CircleItem.cid==cid).all()
+	outcircle
+	friends = db.session.query(Friend).filter(Friend.uid==g.user.uid).all()
+	waitings = db.session.query(Request).filter(Request.done==False).filter(Request.connected==True).filter(Request.sent==True).filter(Request.sender==g.user.uid).all()
+	#print '#####'
+	#print accepts
+	#print '######'
+	#print users
+	return render_template('circleUsers.html', circle=circle, users=users, friends=friends, cid=cid, waitings=waitings)
+
+@app.route('/addCircleItem', methods=['GET','POST'])
+@app.route('/addCircleItem/<cid>_<uid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def addCircleItem(cid, uid):
+	ci = CircleItem(cid=cid, uid=uid)
+	db.session.add(ci)
+	db.session.commit()
+	return redirect(url_for('circleUsers',cid=cid))
+
+@app.route('/deleteCircleItem', methods=['GET','POST'])
+@app.route('/deleteCircleItem/<cid>_<uid>', methods=['GET','POST'])
+@login_required
+@csrf.exempt
+def deleteCircleItem(cid, uid):
+	circles = db.db.session.query(CircleItem).filter(CircleItem.cid==cid).filter(CircleItem.uid==uid).all()
+	for c in circles:
+		delete(c)
+	db.session.commit()
+	return redirect(url_for('circleUsers',cid=cid))
 
 
 
